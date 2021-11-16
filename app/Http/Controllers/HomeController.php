@@ -41,19 +41,34 @@ class HomeController extends Controller
     public function store(Request $request)
     {
         if ($request->post_id != "") {
-            $admin = User::find($request->post_id);
+            $admin = Message::find($request->post_id);
             $request->validate(
                 [
-                    "name" => "required|min:2|max:255",
-                    "email" => $admin->email != $request->email ? "required|max:40|email:rfc,dns|without_spaces|unique:users|unique:customers" : "required|max:40|email:rfc,dns|without_spaces|unique:customers",
-                    "password" =>  $request->password != null || $request->password != "" ? "required|min:8|max:20|confirmed" : "",
+                    "type" => "required",
+                    "text" => $request->type == 1 ? "required|max:1000" : "",
+                    "image" => $request->type == 0  ? "required|mimes:png,jpg,jpeg" : "",
                 ]
             );
-            $user = User::updateOrCreate(['id' => $request->post_id], [
-                "name" => $request->name,
-                "email" => $request->email,
-                "password" => $request->password != null || $request->password != "" ? bcrypt($request->password) : $admin->password,
+            $full_path = '';
 
+            if ($request->type == 0) {
+                if ($admin->type == 0) unlink($admin->data);
+                //การเข้ารหัสรูปภาพ
+                $service_image = $request->file('image');
+                //genarate ชื่อภาพ
+                $name_gen = hexdec(uniqid());
+                //ดึงนามสกุลรูป
+                $img_ext = strtolower($service_image->getClientOriginalExtension());
+                $img_name = $name_gen . '.' . $img_ext;
+
+                $upload_location = "service/images/";
+                $full_path = $upload_location . $img_name;
+                $service_image->move($upload_location, $img_name);
+            }
+
+            $user = Message::updateOrCreate(['id' => $request->post_id], [
+                "type" => $request->type,
+                "data" => $request->type == 1 ? $request->text : $full_path,
             ]);
         } else {
             //เพิ่มข้อมูลใหม่
@@ -91,5 +106,17 @@ class HomeController extends Controller
         if ($request->type == 0) $user->data2 = asset($user->data);
         $user->created_at_2 = Carbon::parse($user->created_at)->locale('th')->diffForHumans();
         return response()->json(['code' => '200', 'message' => 'บันทึกข้อมูลสำเร็จ', 'data' => $user], 200);
+    }
+
+    public function  delete_post($id)
+    {
+        $data = Message::find($id)->delete();
+        return response()->json(['sucess' => "ลบข้อมูลเรียบร้อย", "code" => "200"]);
+    }
+
+    public function get_message($id)
+    {
+        $data = Message::find($id);
+        return response()->json($data);
     }
 }

@@ -8,7 +8,10 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>
+        {{-- {{ config('app.name', 'Auto-Click') }} --}}
+        Auto-Click
+    </title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -43,17 +46,28 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
+                    @if (Auth::check())
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('user.setting.home') }}">หน้าแรก</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/') }}">ข้อมูลแชท</a>
+                            <a class="nav-link" href="{{ url('/home') }}">ข้อมูลแชท</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">เพิ่มข้อมูล Line</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                                aria-haspopup="true" aria-expanded="false">ข้อมูล Line</a>
+                            <div class="dropdown-menu">
+
+                                <a class="dropdown-item" href="{{ route('user.addline.home') }}">เพิ่มข้อมูลใหม่</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item"
+                                    href="{{ route('user.select_user_sent.home') }}">เลือกรายชื่อที่จะส่ง</a>
+                            </div>
                         </li>
                     </ul>
+                    @endif
+
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -61,7 +75,7 @@
                         @guest
                             @if (Route::has('login'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                    <a class="nav-link" href="{{ route('login') }}">{{ __('ล็อกอิน') }}</a>
                                 </li>
                             @endif
 
@@ -80,8 +94,8 @@
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                         onclick="event.preventDefault();
-                                                                                 document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
+                                                                                                                     document.getElementById('logout-form').submit();">
+                                        {{ __('ออกจากระบบ') }}
                                     </a>
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST"

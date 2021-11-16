@@ -252,7 +252,7 @@
                         data: data,
                         success: function(res) {
                             console.log(res);
-                            if (res) {
+                            if (res.code == 200) {
                                 $("#btn_edit").attr('hidden', !true);
                                 $("#btn_save").attr('hidden', !false);
                                 $("#btn_cancel").attr('hidden', !false);
@@ -267,14 +267,15 @@
                             }
                         },
                         error: function(err) {
+                            Swal.fire(
+                                'สำเร็จ!',
+                                'มีข้อผิดพลาดบางอย่างกรุณาลองใหม่อีกครั้ง หรือกรุณาปิดการใช้งานก่อนบันทึก',
+                                'error'
+                            )
                             clear_ms_error();
                             $('#user_loginError').text(err.responseJSON.errors.user_login);
                             $('#passwordError').text(err.responseJSON.errors.password);
-                            Swal.fire(
-                                'สำเร็จ!',
-                                'มีข้อผิดพลาดบางอย่างกรุณาลองใหม่อีกครั้ง',
-                                'error'
-                            )
+
                         }
                     });
                 }

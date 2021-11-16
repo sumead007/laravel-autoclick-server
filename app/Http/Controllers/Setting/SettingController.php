@@ -33,11 +33,18 @@ class SettingController extends Controller
                 "password" => "required|min:8|max:20|",
             ],
         );
+        $data = Config::first();
+        if ($data->status == 0) {
+            $user = Config::updateOrCreate(['id' => 1], [
+                "user_login" => $request->user_login,
+                "password" => $request->password,
+            ]);
+        } else {
+            return response()->json(['code' => '422', 'message' => 'ไม่สำเร็จกรุณาปิดการใช้งานก่อน', 'data' => null], 422);
+        }
 
-        $user = Config::updateOrCreate(['id' => 1], [
-            "user_login" => $request->user_login,
-            "password" => $request->password,
-        ]);
+
+
 
         return response()->json(['code' => '200', 'message' => 'บันทึกข้อมูลสำเร็จ', 'data' => $user], 200);
     }

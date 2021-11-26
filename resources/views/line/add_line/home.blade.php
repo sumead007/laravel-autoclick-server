@@ -19,52 +19,54 @@
                             </a>
                         </div>
                         <br>
-                        <table class="table text-nowrap p-0" id="table_crud">
-                            <thead class="thead-dark">
-                                <tr align="center">
-                                    <th id="th_choese" hidden>เลือก</th>
-                                    <th scope="col">ID</th>
-                                    <th scope="col">ประเภท ID</th>
-                                    <th scope="col">บันทึกเมื่อ</th>
-                                    <th scope="col">อื่นๆ</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($datas as $user)
-                                    <tr align="center" id="row_{{ $user->id }}">
-                                        <th id="td_choese" class="align-middle" hidden>
-                                            <div align="center">
-                                                <input type="checkbox" class="form-check" name="select"
-                                                    data-cusm_id="{{ $user->id }}" id="select_input"
-                                                    value="{{ $user->id }}">
-                                            </div>
-                                        </th>
-                                        <td class="align-middle">
-                                            {{ $user->user_id }}
-                                        </td>
-                                        <td class="align-middle">
-                                            @if ($user->type == 0)
-                                                ID LINE
-                                            @else
-                                                เบอร์โทร
-                                            @endif
-                                        </td>
-
-                                        <td class="align-middle">
-                                            {{ Carbon\Carbon::parse($user->created_at)->locale('th')->diffForHumans() }}
-                                        </td>
-
-                                        <td class="align-middle" align="center">
-                                            <a href="javascript:void(0)" class="btn btn-warning"
-                                                onclick="editPost(@json($user->id))" id='btn_edit'>แก้ไข</a>
-                                            <a href="javascript:void(0)" class="btn btn-danger"
-                                                onclick="deletePost(@json($user->id))" id='btn_delete'>ลบ</a>
-                                        </td>
+                        <div class="table-responsive-md">
+                            <table class="table  text-nowrap p-0 " id="table_crud">
+                                <thead class="thead-dark">
+                                    <tr align="center">
+                                        <th id="th_choese" hidden>เลือก</th>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">ประเภท ID</th>
+                                        <th scope="col">บันทึกเมื่อ</th>
+                                        <th scope="col">อื่นๆ</th>
                                     </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($datas as $user)
+                                        <tr align="center" id="row_{{ $user->id }}">
+                                            <th id="td_choese" class="align-middle" hidden>
+                                                <div align="center">
+                                                    <input type="checkbox" class="form-check" name="select"
+                                                        data-cusm_id="{{ $user->id }}" id="select_input"
+                                                        value="{{ $user->id }}">
+                                                </div>
+                                            </th>
+                                            <td class="align-middle">
+                                                {{ $user->user_id }}
+                                            </td>
+                                            <td class="align-middle">
+                                                @if ($user->type == 0)
+                                                    ID LINE
+                                                @else
+                                                    เบอร์โทร
+                                                @endif
+                                            </td>
 
-                                @endforeach
-                            </tbody>
-                        </table>
+                                            <td class="align-middle">
+                                                {{ Carbon\Carbon::parse($user->created_at)->locale('th')->diffForHumans() }}
+                                            </td>
+
+                                            <td class="align-middle" align="center">
+                                                <a href="javascript:void(0)" class="btn btn-warning"
+                                                    onclick="editPost(@json($user->id))" id='btn_edit'>แก้ไข</a>
+                                                <a href="javascript:void(0)" class="btn btn-danger"
+                                                    onclick="deletePost(@json($user->id))" id='btn_delete'>ลบ</a>
+                                            </td>
+                                        </tr>
+
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                         <div class="d-flex justify-content-center">
                             {!! $datas->links() !!}
                         </div>

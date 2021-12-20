@@ -191,7 +191,7 @@
             });
         }
 
-        function deletePost(passw_id) {
+        function deletePost(pass_id) {
             Swal.fire({
                 title: 'คูณแน่ใจใช่หรือไม่?',
                 text: "คุณต้องการลบข้อมูลใช่หรือไม่?",

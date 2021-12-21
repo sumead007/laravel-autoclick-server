@@ -40,6 +40,19 @@ class AddLineController extends Controller
                     "type" => "required",
                     "id" => $request->type == 0 && $request->id != $admin->user_id ? "required|min:2|max:30|unique:lines,user_id" : "",
                     "phone" => $request->type == 1  && $request->phone != $admin->user_id ? "required|numeric|digits:10|unique:lines,user_id" : "",
+                ],
+                [
+                    "type.required" =>"กรุณากรอกช่องนี้",
+                    "id.required" =>"กรุณากรอกช่องนี้",
+                    "id.min" =>"ต้องมีตัวอักษรระหว่าง 2 - 30 ตัวอักษร",
+                    "id.max" =>"ต้องมีตัวอักษรระหว่าง 2 - 30 ตัวอักษร",
+                    "id.unique" =>"มีผู้ใช้แล้ว",
+
+                    "phone.required" =>"กรุณากรอกช่องนี้",
+                    "phone.numeric" =>"กรุณากรอกช่องนี้เป็นตัวเลข",
+                    "phone.digits" =>"กรุณากรอกช่องนี้ 10 หลัก",
+                    "phone.unique" =>"มีผู้ใช้แล้ว",
+
                 ]
             );
             $user = Line::updateOrCreate(['id' => $request->post_id], [
@@ -57,6 +70,19 @@ class AddLineController extends Controller
                     // "credit" => "required|numeric",
                     // "share_percentage" => 'required|numeric|between:0,99.99',
                 ],
+                [
+                    "type.required" =>"กรุณากรอกช่องนี้",
+                    "id.required" =>"กรุณากรอกช่องนี้",
+                    "id.min" =>"ต้องมีตัวอักษรระหว่าง 2 - 30 ตัวอักษร",
+                    "id.max" =>"ต้องมีตัวอักษรระหว่าง 2 - 30 ตัวอักษร",
+                    "id.unique" =>"มีผู้ใช้แล้ว",
+
+                    "phone.required" =>"กรุณากรอกช่องนี้",
+                    "phone.numeric" =>"กรุณากรอกช่องนี้เป็นตัวเลข",
+                    "phone.digits" =>"กรุณากรอกช่องนี้ 10 หลัก",
+                    "phone.unique" =>"มีผู้ใช้แล้ว",
+
+                ]
             );
 
 

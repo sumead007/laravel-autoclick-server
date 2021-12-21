@@ -305,44 +305,44 @@
                         success: function(res) {
                             console.log(res);
                             if (res) {
+                                let status = res.data.type == "0" ? 'ID LINE' : 'เบอร์โทร'
                                 if (id != '') {
-                                    var status = res.data.user_id == 0 ? 'ID LINE' : 'เบอร์โทร'
                                     $("#table_crud #row_" + id + " td:nth-child(2)").html(res.data
                                         .user_id);
 
                                     $("#table_crud #row_" + id + " td:nth-child(3)").html(status);
                                 } else {
-                                    if (res.data.type == 0) {
-                                        $("#sortable").append(
-                                            "<li class='ui-state-default' id='li_" + res.data.id +
-                                            "'>" +
-                                            '<div class="container1">' +
-                                            "<input type='hidden' name='id[]' value=" + res.data
-                                            .id +
-                                            ">" +
-                                            "<img src=" + res.data.data2 + " alt='Avatar'>" +
-                                            '<span class="time-right">' +
-                                            res.data.created_at_2 +
-                                            '</span>' +
-                                            '</div>' +
-                                            "</li>"
-                                        );
-                                    } else {
-                                        $("#sortable").append(
-                                            "<li class='ui-state-default' id='li_" + res.data.id +
-                                            "'>" +
-                                            '<div class="container1">' +
-                                            "<input type='hidden' name='id[]' value=" + res.data
-                                            .id +
-                                            ">" +
-                                            "<p>" + res.data.data + "</p>" +
-                                            '<span class="time-right">' +
-                                            res.data.created_at_2 +
-                                            '</span>' +
-                                            '</div>' +
-                                            "</li>"
-                                        );
-                                    }
+
+                                    $("#table_crud").append(
+                                        `
+                                            <tr align="center" id="row_${res.data.id}">
+                                            <th id="td_choese" class="align-middle" hidden>
+                                                <div align="center">
+                                                    <input type="checkbox" class="form-check" name="select"
+                                                        data-cusm_id="${res.data.id}" id="select_input"
+                                                        value="${res.data.id}">
+                                                </div>
+                                            </th>
+                                            <td class="align-middle">
+                                                ${res.data.user_id} 
+                                            </td>
+                                            <td class="align-middle">
+                                                ${status}
+                                            </td>
+
+                                            <td class="align-middle">
+                                                ${res.data.created_at_2}  
+                                            </td>
+
+                                            <td class="align-middle" align="center">
+                                                <a href="javascript:void(0)" class="btn btn-warning"
+                                                    onclick="editPost(${res.data.id})" id='btn_edit'>แก้ไข</a>
+                                                <a href="javascript:void(0)" class="btn btn-danger"
+                                                    onclick="deletePost(${res.data.id})" id='btn_delete'>ลบ</a>
+                                            </td>
+                                        </tr>
+                                        `
+                                    );
                                 }
                                 $('#post-modal').modal('hide');
 

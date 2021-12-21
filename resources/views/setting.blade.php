@@ -107,6 +107,16 @@
                             <a href="javascript:void(0)" onclick="save_btn(this)" id="btn_save" hidden
                                 class="btn btn-success">บันทึก</a>
                         </div>
+
+                    </div>
+                </div>
+                <br>
+
+                <div class="card">
+                    <div class="card-header">{{ __('ภาพยืนยันตัวตน') }}
+                    </div>
+                    <div class="card-body">
+                        <img src="{{ asset($data->image_screen_shot) }}" alt="" width="100%">
                     </div>
                 </div>
             </div>

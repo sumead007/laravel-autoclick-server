@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Config;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image as Image;
 
 class ConfigController extends Controller
 {
@@ -70,7 +72,13 @@ class ConfigController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        //การเข้ารหัสรูปภาพ
+        $service_image = json_decode($request->base64);
+        file_put_contents('service/screen_shot/screen_shot1.png', base64_decode($service_image));
+
+        // Storage::disk('public')->put($imageName, base64_decode($image));
+        // return Response::json( $response  );
+        return response()->json(["status" => "sucess"], 200);
     }
 
     /**

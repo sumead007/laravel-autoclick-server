@@ -89,7 +89,6 @@ class ConfigController extends Controller
         }
         if ($action != null) {
             $config->update([
-                "image_screen_shot" => $full_path,
                 "action" => $action
             ]);
         }

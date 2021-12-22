@@ -63,6 +63,17 @@
                         @else
                             <span class="text-danger" id="text_status">ปิดใช้งาน</span>
                         @endif
+                        <br>
+                        {{ __('เหตุการณ์:') }}
+                        @if ($data->status == 0)
+                            <span class="text-success" id="text_status">เริ่มต้นหรือยังไม่ได้ล็อกอิน</span>
+                        @elseif($data->status== 1)
+                            <span class="text-success" id="text_status">กำลังรอ OTP</span>
+                        @elseif($data->status== 2)
+                            <span class="text-success" id="text_status">กำลังทำงาน</span>
+                        @elseif($data->status== 3)
+                            <span class="text-success" id="text_status">จบการทำงาน</span>
+                        @endif
                         <div align="right">
                             @if ($data->status == 1)
                                 <a href="javascript:void(0)" onclick="config(this)" data-status="1"

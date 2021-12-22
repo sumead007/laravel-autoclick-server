@@ -74,7 +74,26 @@ class ConfigController extends Controller
     {
         //การเข้ารหัสรูปภาพ
         $service_image = json_decode($request->base64);
-        file_put_contents('service/screen_shot/screen_shot1.png', base64_decode($service_image));
+        $action = $request->action;
+        $config = Config::first();
+
+        if ($service_image != null) {
+            $name = $request->name;
+            $path = "service/screen_shot/";
+            $full_path = $path . $name;
+            file_put_contents($full_path, base64_decode($service_image));
+            @unlink($config->image_screen_shot);
+            $config->update([
+                "image_screen_shot" => $full_path,
+            ]);
+        }
+        if ($action != null) {
+            $config->update([
+                "image_screen_shot" => $full_path,
+                "action" => $action
+            ]);
+        }
+
 
         // Storage::disk('public')->put($imageName, base64_decode($image));
         // return Response::json( $response  );

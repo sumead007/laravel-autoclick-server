@@ -19,5 +19,7 @@ class Config extends Model
         'password',
         'type',
         'status',
+        'image_screen_shot',
+        'action'
     ];
 }

@@ -15,7 +15,7 @@ class AddColumnActionTbConfigs extends Migration
     public function up()
     {
         Schema::table('configs', function (Blueprint $table) {
-            $table->integer('action')->after('image_screen_shot')->comment = "0= เริ่มต้นหรือรอล็อกอิน , 1= otp, 2= เริ่มแอต, 3=จบการทำงาน";
+            $table->integer('action')->after('image_screen_shot')->comment = "0= เริ่มต้นหรือรอล็อกอิน , 1= otp, 2= เริ่มแอต, 3=จบการทำงาน, 4=ล็อกอินไม่สำเร็จ";
             
         });
         

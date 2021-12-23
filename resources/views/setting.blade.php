@@ -65,14 +65,16 @@
                         @endif
                         <br>
                         {{ __('เหตุการณ์:') }}
-                        @if ($data->status == 0)
-                            <span class="text-success" id="text_status">เริ่มต้นหรือยังไม่ได้ล็อกอิน</span>
-                        @elseif($data->status== 1)
-                            <span class="text-success" id="text_status">กำลังรอ OTP</span>
-                        @elseif($data->status== 2)
-                            <span class="text-success" id="text_status">กำลังทำงาน</span>
-                        @elseif($data->status== 3)
-                            <span class="text-success" id="text_status">จบการทำงาน</span>
+                        @if ($data->action == 0)
+                            <span class="text-dark" id="text_action">เริ่มต้นหรือยังไม่ได้ล็อกอิน</span>
+                        @elseif($data->action== 1)
+                            <span class="text-info" id="text_action">กำลังรอ OTP</span>
+                        @elseif($data->action== 2)
+                            <span class="text-success" id="text_action">กำลังทำงาน</span>
+                        @elseif($data->action== 3)
+                            <span class="text-danger" id="text_action">จบการทำงาน</span>
+                        @elseif($data->action== 4)
+                            <span class="text-danger" id="text_action">ล็อกอินไม่สำเร็จ</span>
                         @endif
                         <div align="right">
                             @if ($data->status == 1)
@@ -136,6 +138,17 @@
 
 
     <script>
+        let t = setInterval(reload, 10000);
+
+        function reload() {
+            let status = $("#text_status").html()
+            if (status == "เปิดใช้งาน") {
+                location.reload();
+            } else {
+                clearInterval(t);
+            }
+        }
+
         function config(val) {
             var status = $(val).attr('data-status');
             // console.log(status);
@@ -178,22 +191,25 @@
 
                                     $("#text_status").html('ปิดใช้งาน');
                                     $("#text_status").attr('class', 'text-danger');
-
-
                                 } else {
                                     $(val).attr('data-status', res.data);
                                     $(val).attr('class', 'btn btn-danger');
                                     $(val).html('ปิดใช้งาน');
-
                                     $("#text_status").html('เปิดใช้งาน');
                                     $("#text_status").attr('class', 'text-success');
                                 }
+
+                                $("#text_action").html('กำลังดำเนินการ...');
+                                $("#text_action").attr('class', 'text-Secondary');
+                                setTimeout(continueExecution, 30000)
 
                                 Swal.fire(
                                     'สำเร็จ!',
                                     res.message,
                                     'success'
                                 )
+
+
                             }
                         },
                         error: function(err) {
@@ -207,6 +223,13 @@
                 }
             })
         }
+
+        function continueExecution() {
+            // console.log("test");
+            location.reload();
+        }
+
+
 
         function edit_btn(val) {
             $("#btn_edit").attr('hidden', true);

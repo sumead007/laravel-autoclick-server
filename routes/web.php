@@ -45,9 +45,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('user/addline/store', [AddLineController::class, 'store'])->name('user.addline.store');
     Route::post('user/get_api/get_addline/{id}', [AddLineController::class, 'get_addline']);
     Route::delete('user/addline/delete/{id}', [AddLineController::class, 'delete_post']);
-
+    //import csv
+    Route::post('file-import', [AddLineController::class, 'fileImport'])->name('file-import');
+    
     //select_user_sent
     Route::get('user/select_user_sent/home', [SelectUserSentController::class, 'index'])->name('user.select_user_sent.home');
     Route::post('user/select_user_sent/store', [SelectUserSentController::class, 'store'])->name('user.select_user_sent.store');
-
 });

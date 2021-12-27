@@ -14,10 +14,16 @@
                             </div>
                         @endif
                         <div align="right">
+                            <a href="javascript:void(0)" class="btn btn-success" onclick="btn_upload_excel()">
+                                นำเข้าจากไฟล์ excel
+                            </a>
                             <a href="javascript:void(0)" class="btn btn-primary" onclick="addPost()">
                                 เพิ่มข้อมูล
                             </a>
                         </div>
+                        <form id="upload_excel" name="upload_excel">
+                            <input id='fileid' type='file' hidden />
+                        </form>
                         <br>
                         <div class="table-responsive-md">
                             <table class="table  text-nowrap p-0 " id="table_crud">
@@ -128,6 +134,55 @@
     </div>
 
     <script>
+        function btn_upload_excel() {
+            document.getElementById('fileid').click();
+        }
+        document.getElementById('fileid').addEventListener('change', submitForm);
+
+        function submitForm() {
+            Swal.fire({
+                title: 'คูณแน่ใจใช่หรือไม่?',
+                text: "คุณต้องการนำเข้าข้อมูลใช่หรือไม่?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'ตกลง',
+                cancelButtonText: 'ยกเลิก'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('formid').submit();
+                    let _token = $('meta[name="csrf-token"]').attr('content');
+
+                    // $.ajax({
+                    //     url: _url,
+                    //     type: "POST",
+                    //     data: {
+                    //         _token: _token,
+                    //     },
+                    //     success: function(res) {
+                    //         console.log(res);
+                    //         if (res.code == '200') {
+                    //             document.getElementById('formid').submit();
+                    //             Swal.fire(
+                    //                 'สำเร็จ!',
+                    //                 'ข้อมูลถูกลบเรียบร้อยแล้ว',
+                    //                 'success'
+                    //             )
+                    //         } else {
+                    //             Swal.fire(
+                    //                 'ไม่สำเร็จ!',
+                    //                 res.error,
+                    //                 'error'
+                    //             )
+                    //         }
+                    //     }
+                    // });
+                }
+            })
+
+        }
+
         function editPost(pass_id) {
             clear_ms_error();
             var id = pass_id;

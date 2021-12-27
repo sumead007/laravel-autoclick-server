@@ -18,5 +18,6 @@ class Line extends Model
         'user_id',
         'type',
         'status',
+        'user_tel'
     ];
 }

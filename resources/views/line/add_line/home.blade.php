@@ -1,11 +1,28 @@
 @extends('layouts.app')
 
 @section('content')
+    <style>
+        .progress {
+            display: block;
+            text-align: center;
+            width: 0;
+            height: 5px;
+            background: skyblue;
+            transition: width .3s;
+        }
+
+        .progress.hide {
+            opacity: 0;
+            transition: opacity 1.3s;
+        }
+
+    </style>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">{{ __('ข้อมูล Line') }}</div>
+                    <div class="progress"></div>
 
                     <div class="card-body">
                         @if (session('status'))
@@ -13,6 +30,7 @@
                                 {{ session('status') }}
                             </div>
                         @endif
+
                         <div align="right">
                             <a href="javascript:void(0)" class="btn btn-success" onclick="btn_upload_excel()">
                                 นำเข้าจากไฟล์ excel
@@ -22,7 +40,7 @@
                             </a>
                         </div>
                         <form id="upload_excel" name="upload_excel">
-                            <input id='fileid' type='file' hidden />
+                            <input id='fileid' name="fileid" type='file' accept=".csv, .xlsx" hidden />
                         </form>
                         <br>
                         <div class="table-responsive-md">
@@ -30,8 +48,10 @@
                                 <thead class="thead-dark">
                                     <tr align="center">
                                         <th id="th_choese" hidden>เลือก</th>
+                                        <th scope="col">ลำดับ</th>
                                         <th scope="col">ID</th>
-                                        <th scope="col">ประเภท ID</th>
+                                        <th scope="col">เบอร์โทร</th>
+                                        <th scope="col">แอตจาก</th>
                                         <th scope="col">บันทึกเมื่อ</th>
                                         <th scope="col">อื่นๆ</th>
                                     </tr>
@@ -47,7 +67,13 @@
                                                 </div>
                                             </th>
                                             <td class="align-middle">
+                                                {{ $datas->firstitem() + $loop->index }}
+                                            </td>
+                                            <td class="align-middle">
                                                 {{ $user->user_id }}
+                                            </td>
+                                            <td class="align-middle">
+                                                {{ $user->user_tel }}
                                             </td>
                                             <td class="align-middle">
                                                 @if ($user->type == 0)
@@ -93,10 +119,10 @@
                     <form name="form_second" id="form_second" class="form-horizontal">
                         <input type="hidden" name="post_id" id="post_id">
                         <div class="form-group">
-                            <label for="type">เลือกประเภทLine</label>
+                            <label for="type">แอตจาก</label>
                             <div class="col-sm-12">
-                                <select name="type" id="type" class="form-control" onchange="select_change(this)">
-                                    <option value="" disabled selected>กรุณาเลือกประเภทLine</option>
+                                <select name="type" id="type" class="form-control">
+                                    <option value="" disabled selected>กรุณาเลือกประเภทที่จะแอตLine</option>
                                     <option value="0">ID</option>
                                     <option value="1">เบอร์โทร</option>
                                 </select>
@@ -104,20 +130,20 @@
                             </div>
                         </div>
 
-                        <div class="form-group" id="f-image" hidden>
-                            <label for="id">ID</label>
+                        <div class="form-group" id="f-image">
+                            <label for="id">ID <span class="text-danger"> <i>*ไม่มีให้ใส่ -</i></span></label>
                             <div class="col-sm-12">
-                                <input type="text" class="form-control" id="id" name="id" placeholder="กรุณากรอก ID"
-                                    required>
+                                <input type="text" class="form-control" id="id" name="id"
+                                    placeholder="กรุณากรอก ID (ไม่มีให้ใส่ -)" required>
                                 <span id="idError" class="alert-message text-danger"></span>
                             </div>
                         </div>
 
-                        <div class="form-group" id="f-text" hidden>
-                            <label for="phone">เบอร์โทร</label>
+                        <div class="form-group" id="f-text">
+                            <label for="phone">เบอร์โทร <span class="text-danger"> <i>*ไม่มีให้ใส่ -</i></span></label>
                             <div class="col-sm-12">
-                                <input type="number" class="form-control" id="phone" name="phone"
-                                    placeholder="กรุณากรอกชื่อเบอร์โทร" required>
+                                <input type="text" class="form-control" id="phone" name="phone"
+                                    placeholder="กรุณากรอกชื่อเบอร์โทร (ไม่มีให้ใส่ -)" required>
                                 <span id="phoneError" class="alert-message text-danger"></span>
                             </div>
                         </div>
@@ -132,7 +158,6 @@
             </div>
         </div>
     </div>
-
     <script>
         function btn_upload_excel() {
             document.getElementById('fileid').click();
@@ -151,33 +176,67 @@
                 cancelButtonText: 'ยกเลิก'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    document.getElementById('formid').submit();
+                    // document.getElementById('formid').submit();
                     let _token = $('meta[name="csrf-token"]').attr('content');
 
-                    // $.ajax({
-                    //     url: _url,
-                    //     type: "POST",
-                    //     data: {
-                    //         _token: _token,
-                    //     },
-                    //     success: function(res) {
-                    //         console.log(res);
-                    //         if (res.code == '200') {
-                    //             document.getElementById('formid').submit();
-                    //             Swal.fire(
-                    //                 'สำเร็จ!',
-                    //                 'ข้อมูลถูกลบเรียบร้อยแล้ว',
-                    //                 'success'
-                    //             )
-                    //         } else {
-                    //             Swal.fire(
-                    //                 'ไม่สำเร็จ!',
-                    //                 res.error,
-                    //                 'error'
-                    //             )
-                    //         }
-                    //     }
-                    // });
+                    var form = $('#upload_excel')[0];
+                    var data = new FormData(form);
+                    let _url = "{{ route('file-import') }}";
+                    $.ajax({
+                        xhr: function() {
+                            var xhr = new window.XMLHttpRequest();
+                            xhr.upload.addEventListener("progress", function(evt) {
+                                if (evt.lengthComputable) {
+                                    var percentComplete = evt.loaded / evt.total;
+                                    console.log(percentComplete);
+                                    $('.progress').css({
+                                        width: percentComplete * 100 + '%'
+                                    });
+                                    if (percentComplete === 1) {
+                                        $('.progress').addClass('hide');
+                                    }
+                                }
+                            }, false);
+                            xhr.addEventListener("progress", function(evt) {
+                                if (evt.lengthComputable) {
+                                    var percentComplete = evt.loaded / evt.total;
+                                    console.log(percentComplete);
+                                    $('.progress').css({
+                                        width: percentComplete * 100 + '%'
+                                    });
+                                }
+                            }, false);
+                            return xhr;
+                        },
+                        url: _url,
+                        type: "POST",
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        enctype: 'multipart/form-data',
+                        processData: false, // Important!
+                        contentType: false,
+                        cache: false,
+                        timeout: 600000,
+                        data: data,
+                        success: function(res) {
+                            console.log(res);
+                            Swal.fire(
+                                'สำเร็จ!',
+                                res.sucess,
+                                'success'
+                            ).then(function() {
+                                location.reload();
+                            })
+                        },
+                        error: function(err) {
+                            Swal.fire(
+                                'สำเร็จ!',
+                                err.responseJSON.errors.fileid[0],
+                                'error'
+                            )
+                        }
+                    });
                 }
             })
 
@@ -217,52 +276,6 @@
             });
         }
 
-        function deletePost(pass_id) {
-            Swal.fire({
-                title: 'คูณแน่ใจใช่หรือไม่?',
-                text: "คุณต้องการลบข้อมูลใช่หรือไม่?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'ตกลง',
-                cancelButtonText: 'ยกเลิก'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    var id = pass_id;
-                    let _url = "/user/delete/" + id;
-                    let _token = $('meta[name="csrf-token"]').attr('content');
-
-                    $.ajax({
-                        url: _url,
-                        type: "DELETE",
-                        data: {
-                            _token: _token,
-                        },
-                        success: function(res) {
-                            console.log(res);
-                            if (res.code == '200') {
-                                $("#li_" + id).remove();
-                                Swal.fire(
-                                    'สำเร็จ!',
-                                    'ข้อมูลถูกลบเรียบร้อยแล้ว',
-                                    'success'
-                                )
-                            } else {
-                                Swal.fire(
-                                    'ไม่สำเร็จ!',
-                                    res.error,
-                                    'error'
-                                )
-                            }
-
-                        }
-
-                    });
-                }
-            })
-
-        }
 
         function deletePost(pass_id) {
             Swal.fire({
@@ -309,18 +322,6 @@
                 }
             })
 
-        }
-
-        function select_change(dthis) {
-            var status = $(dthis).val()
-            // console.log(status);
-            if (status == 0) {
-                $("#f-text").attr("hidden", true);
-                $("#f-image").attr("hidden", false);
-            } else {
-                $("#f-text").attr("hidden", false);
-                $("#f-image").attr("hidden", true);
-            }
         }
 
         function addPost() {
@@ -379,14 +380,14 @@
                                                 </div>
                                             </th>
                                             <td class="align-middle">
-                                                ${res.data.user_id} 
+                                                ${res.data.user_id}
                                             </td>
                                             <td class="align-middle">
                                                 ${status}
                                             </td>
 
                                             <td class="align-middle">
-                                                ${res.data.created_at_2}  
+                                                ${res.data.created_at_2}
                                             </td>
 
                                             <td class="align-middle" align="center">

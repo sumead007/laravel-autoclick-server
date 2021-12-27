@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+    @php
+    $i = 0;
+    @endphp
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
@@ -31,8 +34,10 @@
                                     <thead class="thead-dark">
                                         <tr align="center">
                                             <th id="th_choese">เลือก</th>
+                                            <th scope="col">ลำดับ</th>
                                             <th scope="col">ID</th>
-                                            <th scope="col">ประเภท ID</th>
+                                            <th scope="col">เบอร์โทร</th>
+                                            <th scope="col">แอตจาก</th>
                                             <th scope="col">สถานะ</th>
                                             <th scope="col">บันทึกเมื่อ</th>
                                             {{-- <th scope="col">อื่นๆ</th> --}}
@@ -49,7 +54,13 @@
                                                     </div>
                                                 </th>
                                                 <td class="align-middle">
+                                                    {{ ++$i }}
+                                                </td>
+                                                <td class="align-middle">
                                                     {{ $user->user_id }}
+                                                </td>
+                                                <td class="align-middle">
+                                                    {{ $user->user_tel }}
                                                 </td>
                                                 <td class="align-middle">
                                                     @if ($user->type == 0)
@@ -117,7 +128,6 @@
                                 <span id="typeError" class="alert-message text-danger"></span>
                             </div>
                         </div>
-
                         <div class="form-group" id="f-image" hidden>
                             <label for="id">ID</label>
                             <div class="col-sm-12">

@@ -35,9 +35,9 @@
                             <a href="javascript:void(0)" class="btn btn-success" onclick="btn_upload_excel()">
                                 นำเข้าจากไฟล์ excel
                             </a>
-                            <a href="javascript:void(0)" class="btn btn-primary" onclick="addPost()">
+                            {{-- <a href="javascript:void(0)" class="btn btn-primary" onclick="addPost()">
                                 เพิ่มข้อมูล
-                            </a>
+                            </a> --}}
                         </div>
                         <form id="upload_excel" name="upload_excel">
                             <input id='fileid' name="fileid" type='file' accept=".csv, .xlsx" hidden />
@@ -88,8 +88,8 @@
                                             </td>
 
                                             <td class="align-middle" align="center">
-                                                <a href="javascript:void(0)" class="btn btn-warning"
-                                                    onclick="editPost(@json($user->id))" id='btn_edit'>แก้ไข</a>
+                                                {{-- <a href="javascript:void(0)" class="btn btn-warning"
+                                                    onclick="editPost(@json($user->id))" id='btn_edit'>แก้ไข</a> --}}
                                                 <a href="javascript:void(0)" class="btn btn-danger"
                                                     onclick="deletePost(@json($user->id))" id='btn_delete'>ลบ</a>
                                             </td>
@@ -259,16 +259,8 @@
                     if (res) {
                         $("#post_id").val(res.id);
                         $("#type").val(res.type);
-                        if (res.type == 0) {
-                            $("#id").val(res.user_id);
-                            $("#f-text").attr("hidden", true);
-                            $("#f-image").attr("hidden", false);
-                        } else {
-                            $("#phone").val(res.user_id);
-                            $("#f-text").attr("hidden", false);
-                            $("#f-image").attr("hidden", true);
-                        }
-
+                        $("#id").val(res.user_id);
+                        $("#phone").val(res.user_phone);
                         $('#post-modal').modal('show');
 
                     }
@@ -365,11 +357,12 @@
                                 if (id != '') {
                                     $("#table_crud #row_" + id + " td:nth-child(2)").html(res.data
                                         .user_id);
-
-                                    $("#table_crud #row_" + id + " td:nth-child(3)").html(status);
+                                    $("#table_crud #row_" + id + " td:nth-child(3)").html(res.data
+                                        .user_tel);
+                                    $("#table_crud #row_" + id + " td:nth-child(4)").html(status);
                                 } else {
 
-                                    $("#table_crud").append(
+                                    $("#table_crud").prepend(
                                         `
                                             <tr align="center" id="row_${res.data.id}">
                                             <th id="td_choese" class="align-middle" hidden>
@@ -380,7 +373,13 @@
                                                 </div>
                                             </th>
                                             <td class="align-middle">
+                                                <i class="text-success">new</i>
+                                            </td>
+                                            <td class="align-middle">
                                                 ${res.data.user_id}
+                                            </td>
+                                            <td class="align-middle">
+                                                ${res.data.user_tel}
                                             </td>
                                             <td class="align-middle">
                                                 ${status}

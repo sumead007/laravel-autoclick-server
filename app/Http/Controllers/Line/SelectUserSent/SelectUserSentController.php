@@ -27,7 +27,7 @@ class SelectUserSentController extends Controller
      */
     public function index()
     {
-        $datas = Line::orderBy('status', 'asc')->get();
+        $datas = Line::orderBy('status', 'asc')->paginate(100);
 
         return view('line.select_user_sent.home', compact('datas'));
     }

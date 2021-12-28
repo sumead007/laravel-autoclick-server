@@ -28,7 +28,7 @@ class AddLineController extends Controller
      */
     public function index()
     {
-        $datas = Line::orderByDesc('created_at')->paginate(15);
+        $datas = Line::orderByDesc('created_at')->paginate(100);
 
         return view('line.add_line.home', compact('datas'));
     }
@@ -41,7 +41,7 @@ class AddLineController extends Controller
                 [
                     "type" => "required",
                     "id" => $request->id != $admin->user_id ? "required|min:1|max:30|unique:lines,user_id" : "",
-                    "phone" => $request->user_tel != $admin->user_tel ? "required|digits:10|unique:lines,user_tel" : "",
+                    "phone" => $request->user_tel != $admin->user_tel ? ["required|digits:10|unique:lines,user_tel"] : "",
                 ],
                 [
                     "type.required" => "กรุณากรอกช่องนี้",

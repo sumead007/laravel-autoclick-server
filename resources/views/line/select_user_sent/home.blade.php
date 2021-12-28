@@ -54,7 +54,7 @@
                                                     </div>
                                                 </th>
                                                 <td class="align-middle">
-                                                    {{ ++$i }}
+                                                    {{ $datas->firstitem() + $loop->index }}
                                                 </td>
                                                 <td class="align-middle">
                                                     {{ $user->user_id }}
@@ -94,9 +94,9 @@
                                 </table>
                             </div>
                         </form>
-                        {{-- <div class="d-flex justify-content-center">
+                        <div class="d-flex justify-content-center">
                             {!! $datas->links() !!}
-                        </div> --}}
+                        </div>
                         <div align="right">
                             <a href="javascript:void(0)" onclick="save_btn(1)" class="btn btn-danger">ยกเลิกคิว</a>
                             <a href="javascript:void(0)" onclick="save_btn(0)" class="btn btn-success">จองคิว</a>
@@ -195,7 +195,7 @@
                                 "<p class='text-success'>อยู่ในคิวแล้ว</p>"
 
                             $.each(res.data.id, function(i, item) {
-                                $("#table_crud #row_" + item + " td:nth-child(4)").html(status);
+                                $("#table_crud #row_" + item + " td:nth-child(6)").html(status);
                             });
                             Swal.fire(
                                 'สำเร็จ!',

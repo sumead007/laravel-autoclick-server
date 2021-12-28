@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\LineImport;
+use App\Models\Config;
 
 class AddLineController extends Controller
 {
@@ -35,6 +36,9 @@ class AddLineController extends Controller
 
     public function store(Request $request)
     {
+        $data = Config::first();
+        if ($data->status == 1) return response()->json(['code' => '422', 'message' => 'กรุณาปิดการใช้งานก่อน'], 422);
+        
         if ($request->post_id != "") {
             $admin = Line::find($request->post_id);
             $request->validate(
@@ -109,6 +113,9 @@ class AddLineController extends Controller
 
     public function delete_post($id)
     {
+        $data = Config::first();
+        if ($data->status == 1) return response()->json(['code' => '422', 'message' => 'กรุณาปิดการใช้งานก่อน'], 422);
+        
         $data = Line::find($id)->delete();
         return response()->json(['sucess' => "ลบข้อมูลเรียบร้อย", "code" => "200"]);
     }
@@ -118,6 +125,9 @@ class AddLineController extends Controller
      */
     public function fileImport(Request $request)
     {
+        $data = Config::first();
+        if ($data->status == 1) return response()->json(['code' => '422', 'message' => 'กรุณาปิดการใช้งานก่อน'], 422);
+        
         $request->validate(
             [
                 "fileid" => "required|mimes:csv,xlsx",

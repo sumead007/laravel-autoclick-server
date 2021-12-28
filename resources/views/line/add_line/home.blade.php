@@ -230,9 +230,18 @@
                             })
                         },
                         error: function(err) {
+                            let message = "";
+                            if (err.responseJSON.message != null) {
+                                message = err.responseJSON.message
+                            } else if (err.responseJSON.errors.fileid[0] != null) {
+                                message = err.responseJSON.errors.fileid[0]
+                            } else {
+                                message = "มีข้อผิดพลาดกรุณาลองรีเฟชหน้าจออีกครั้ง"
+                            }
+
                             Swal.fire(
-                                'สำเร็จ!',
-                                err.responseJSON.errors.fileid[0],
+                                'เกิดข้อผิดพลาด!',
+                                message,
                                 'error'
                             )
                         }
@@ -307,6 +316,14 @@
                                     'error'
                                 )
                             }
+
+                        },
+                        error: function(err) {
+                            Swal.fire(
+                                'มีข้อผิดพลาด!',
+                                err.responseJSON.message,
+                                'error'
+                            )
 
                         }
 
@@ -414,8 +431,8 @@
                             $('#idError').text(err.responseJSON.errors.id);
                             $('#phoneError').text(err.responseJSON.errors.phone);
                             Swal.fire(
-                                'สำเร็จ!',
-                                'มีข้อผิดพลาดบางอย่างกรุณาลองใหม่อีกครั้ง',
+                                'มีข้อผิดพลาด!',
+                                err.responseJSON.message,
                                 'error'
                             )
                         }

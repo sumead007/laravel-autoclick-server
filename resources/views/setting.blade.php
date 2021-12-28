@@ -559,8 +559,8 @@
                         },
                         error: function(err) {
                             Swal.fire(
-                                'สำเร็จ!',
-                                'มีข้อผิดพลาดบางอย่างกรุณาลองใหม่อีกครั้ง',
+                                'มีข้อผิดพลาด!',
+                                err.responseJSON.message,
                                 'error'
                             )
                         }

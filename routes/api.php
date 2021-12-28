@@ -35,4 +35,5 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::resource('addline', 'App\Http\Controllers\AddlineController');
     Route::resource('message', 'App\Http\Controllers\MessageController');
     Route::resource('config', 'App\Http\Controllers\ConfigController');
+    Route::resource('line_login', 'App\Http\Controllers\LineLoginController');
 });

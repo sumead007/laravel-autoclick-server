@@ -47,7 +47,7 @@ class SettingController extends Controller
     {
         $data = Config::first();
         if ($data->status == 1) return response()->json(['code' => '422', 'message' => 'กรุณาปิดการใช้งานก่อน'], 422);
-        
+
         #อัพเดท
         if ($request->post_id != "") {
             $admin = LineLogin::find($request->post_id);
@@ -113,6 +113,10 @@ class SettingController extends Controller
     public function update_status(Request $request)
     {
         $status = $request->status == 1 ? 0 : 1;
+        if ($status == 1) {
+            $data =  LineLogin::where('status', 1)->get();
+            if (count($data) <= 0) return response()->json(['code' => '401', 'message' => 'กรุณาเลือกไอดีที่จะล็อกอินอย่างน้อย 1 ไอดี'], 422);
+        }
         $user = Config::updateOrCreate(['id' => 1], [
             "status" => $status,
         ]);

@@ -26,7 +26,7 @@ class LineImport implements ToCollection
                 $chk_user_id = Line::where(["user_id" => $user_id])->get();
                 $chk_user_tel = Line::where(["user_tel" => $new_user_tel])->get();
                 if (count($chk_user_id) <= 0  && count($chk_user_tel) <= 0) {
-                    $type = 0;
+                    $type = 1;
                     if ($new_user_tel == null) {
                         $type = 0;
                     }

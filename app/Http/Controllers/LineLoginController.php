@@ -70,7 +70,7 @@ class LineLoginController extends Controller
      */
     public function update(Request $request, $id)
     {
-        LineLogin::find($id)->update(["status" => 2]);
+        LineLogin::find($id)->update(["status" => $request->status]);
         return response()->json(200);
     }
 

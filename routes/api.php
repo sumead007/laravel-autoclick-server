@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LineNotifyController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -36,4 +37,5 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::resource('message', 'App\Http\Controllers\MessageController');
     Route::resource('config', 'App\Http\Controllers\ConfigController');
     Route::resource('line_login', 'App\Http\Controllers\LineLoginController');
+    Route::post('line_notify', [LineNotifyController::class, 'sent_message']);
 });

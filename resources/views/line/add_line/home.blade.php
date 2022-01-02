@@ -35,9 +35,9 @@
                             <a href="javascript:void(0)" class="btn btn-success" onclick="btn_upload_excel()">
                                 นำเข้าจากไฟล์ excel
                             </a>
-                            {{-- <a href="javascript:void(0)" class="btn btn-primary" onclick="addPost()">
+                            <a href="javascript:void(0)" class="btn btn-primary" onclick="addPost()">
                                 เพิ่มข้อมูล
-                            </a> --}}
+                            </a>
                         </div>
                         <form id="upload_excel" name="upload_excel">
                             <input id='fileid' name="fileid" type='file' accept=".csv, .xlsx" hidden />
@@ -88,8 +88,8 @@
                                             </td>
 
                                             <td class="align-middle" align="center">
-                                                {{-- <a href="javascript:void(0)" class="btn btn-warning"
-                                                    onclick="editPost(@json($user->id))" id='btn_edit'>แก้ไข</a> --}}
+                                                <a href="javascript:void(0)" class="btn btn-warning"
+                                                    onclick="editPost(@json($user->id))" id='btn_edit'>แก้ไข</a>
                                                 <a href="javascript:void(0)" class="btn btn-danger"
                                                     onclick="deletePost(@json($user->id))" id='btn_delete'>ลบ</a>
                                             </td>
@@ -131,7 +131,7 @@
                         </div>
 
                         <div class="form-group" id="f-image">
-                            <label for="id">ID <span class="text-danger"> <i>*ไม่มีให้ใส่ -</i></span></label>
+                            <label for="id">ID <span class="text-danger"> <i>*ไม่มีไม่ต้องกรอก</i></span></label>
                             <div class="col-sm-12">
                                 <input type="text" class="form-control" id="id" name="id"
                                     placeholder="กรุณากรอก ID (ไม่มีให้ใส่ -)" required>
@@ -140,9 +140,10 @@
                         </div>
 
                         <div class="form-group" id="f-text">
-                            <label for="phone">เบอร์โทร <span class="text-danger"> <i>*ไม่มีให้ใส่ -</i></span></label>
+                            <label for="phone">เบอร์โทร <span class="text-danger">
+                                    <i>*ไม่มีไม่ต้องกรอก</i></span></label>
                             <div class="col-sm-12">
-                                <input type="text" class="form-control" id="phone" name="phone"
+                                <input type="number" class="form-control" id="phone" name="phone"
                                     placeholder="กรุณากรอกชื่อเบอร์โทร (ไม่มีให้ใส่ -)" required>
                                 <span id="phoneError" class="alert-message text-danger"></span>
                             </div>
@@ -188,7 +189,7 @@
                             xhr.upload.addEventListener("progress", function(evt) {
                                 if (evt.lengthComputable) {
                                     var percentComplete = evt.loaded / evt.total;
-                                    console.log(percentComplete);
+                                    // console.log(percentComplete);
                                     $('.progress').css({
                                         width: percentComplete * 100 + '%'
                                     });
@@ -220,7 +221,7 @@
                         timeout: 600000,
                         data: data,
                         success: function(res) {
-                            console.log(res);
+                            // console.log(res);
                             Swal.fire(
                                 'สำเร็จ!',
                                 res.sucess,
@@ -264,12 +265,12 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(res) {
-                    console.log(res);
+                    // console.log(res);
                     if (res) {
                         $("#post_id").val(res.id);
                         $("#type").val(res.type);
                         $("#id").val(res.user_id);
-                        $("#phone").val(res.user_phone);
+                        $("#phone").val(res.user_tel);
                         $('#post-modal').modal('show');
 
                     }
@@ -301,7 +302,7 @@
                             _token: _token,
                         },
                         success: function(res) {
-                            console.log(res);
+                            // console.log(res);
                             if (res.code == '200') {
                                 $("#row_" + id).remove();
                                 Swal.fire(
@@ -368,17 +369,19 @@
                         timeout: 600000,
                         data: data,
                         success: function(res) {
-                            console.log(res);
+                            // console.log(res);
                             if (res) {
                                 let status = res.data.type == "0" ? 'ID LINE' : 'เบอร์โทร'
-                                if (id != '') {
-                                    $("#table_crud #row_" + id + " td:nth-child(2)").html(res.data
-                                        .user_id);
-                                    $("#table_crud #row_" + id + " td:nth-child(3)").html(res.data
-                                        .user_tel);
-                                    $("#table_crud #row_" + id + " td:nth-child(4)").html(status);
-                                } else {
+                                let user_id = res.data.user_id == null ? "" : res.data.user_id;
+                                let user_tel = res.data.user_tel == null ? "" : res.data.user_tel;
 
+                                if (id != '') {
+                                    $("#table_crud #row_" + id + " td:nth-child(3)").html(user_id);
+                                    $("#table_crud #row_" + id + " td:nth-child(4)").html(user_tel);
+                                    $("#table_crud #row_" + id + " td:nth-child(5)").html(status);
+                                } else {
+                                    let user_id = res.data.user_id == null ? "" : res.data.user_id;
+                                    let user_tel = res.data.user_tel == null ? "" : res.data.user_tel;
                                     $("#table_crud").prepend(
                                         `
                                             <tr align="center" id="row_${res.data.id}">
@@ -393,10 +396,10 @@
                                                 <i class="text-success">new</i>
                                             </td>
                                             <td class="align-middle">
-                                                ${res.data.user_id}
+                                                ${user_id}
                                             </td>
                                             <td class="align-middle">
-                                                ${res.data.user_tel}
+                                                ${user_tel}
                                             </td>
                                             <td class="align-middle">
                                                 ${status}
@@ -426,15 +429,16 @@
                             }
                         },
                         error: function(err) {
-                            clear_ms_error();
-                            $('#typeError').text(err.responseJSON.errors.type);
-                            $('#idError').text(err.responseJSON.errors.id);
-                            $('#phoneError').text(err.responseJSON.errors.phone);
                             Swal.fire(
                                 'มีข้อผิดพลาด!',
                                 err.responseJSON.message,
                                 'error'
                             )
+                            clear_ms_error();
+                            $('#typeError').text(err.responseJSON.errors.type);
+                            $('#idError').text(err.responseJSON.errors.id);
+                            $('#phoneError').text(err.responseJSON.errors.phone);
+
                         }
                     });
                 }

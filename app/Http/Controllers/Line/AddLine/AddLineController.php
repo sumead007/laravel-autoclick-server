@@ -38,14 +38,15 @@ class AddLineController extends Controller
     {
         $data = Config::first();
         if ($data->status == 1) return response()->json(['code' => '422', 'message' => 'กรุณาปิดการใช้งานก่อน'], 422);
-        
+        if ($request->id == null && $request->phone == null) return response()->json(['code' => '403', 'message' => 'กรุณากรอกข้อมูล'], 403);
+
         if ($request->post_id != "") {
             $admin = Line::find($request->post_id);
             $request->validate(
                 [
                     "type" => "required",
-                    "id" => $request->id != $admin->user_id ? "required|min:1|max:30|unique:lines,user_id" : "",
-                    "phone" => $request->user_tel != $admin->user_tel ? ["required|digits:10|unique:lines,user_tel"] : "",
+                    "id" => $request->id != $admin->user_id ? "nullable|min:1|max:30|unique:lines,user_id" : "",
+                    "phone" => $request->phone != $admin->user_tel ? "nullable|digits:10|unique:lines,user_tel" : "",
                 ],
                 [
                     "type.required" => "กรุณากรอกช่องนี้",
@@ -71,8 +72,8 @@ class AddLineController extends Controller
             $request->validate(
                 [
                     "type" => "required",
-                    "id" =>  "required|min:1|max:30|unique:lines,user_id",
-                    "phone" => $request->type == 0 ? "required|unique:lines,user_tel" : "required|digits:10|unique:lines,user_tel",
+                    "id" => $request->type == 1 ? "nullable|min:1|max:30|unique:lines,user_id" : "required|nullable|min:1|max:30|unique:lines,user_id",
+                    "phone" => $request->type == 0 ?  "nullable|digits:10|unique:lines,user_tel" : "required|nullable|min:1|max:30|unique:lines,user_tel",
                     // "telephone" => "required|numeric|digits:10|unique:users|unique:admins",
                     // "credit" => "required|numeric",
                     // "share_percentage" => 'required|numeric|between:0,99.99',
@@ -115,7 +116,7 @@ class AddLineController extends Controller
     {
         $data = Config::first();
         if ($data->status == 1) return response()->json(['code' => '422', 'message' => 'กรุณาปิดการใช้งานก่อน'], 422);
-        
+
         $data = Line::find($id)->delete();
         return response()->json(['sucess' => "ลบข้อมูลเรียบร้อย", "code" => "200"]);
     }
@@ -127,7 +128,7 @@ class AddLineController extends Controller
     {
         $data = Config::first();
         if ($data->status == 1) return response()->json(['code' => '422', 'message' => 'กรุณาปิดการใช้งานก่อน'], 422);
-        
+
         $request->validate(
             [
                 "fileid" => "required|mimes:csv,xlsx",

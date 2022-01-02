@@ -347,7 +347,7 @@
                                             <tr align="center" id="row_${res.data.id}">
                                             <th id="td_choese" class="align-middle">
                                                 <div align="center">
-                                                    <input type="checkbox" class="form-check" name="select"
+                                                    <input type="checkbox" class="form-check" name="select[]"
                                                         data-cusm_id="${res.data.id}" id="select_input"
                                                         value="${res.data.id}">
                                                 </div>

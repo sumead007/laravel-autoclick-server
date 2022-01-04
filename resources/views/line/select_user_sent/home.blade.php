@@ -28,7 +28,7 @@
                         </div>
                         <br>
                         <form id="form_first">
-                            <div class="table-responsive-md">
+                            <div class="table-responsive">
 
                                 <table class="table text-nowrap p-0" id="table_crud">
                                     <thead class="thead-dark">
@@ -39,6 +39,8 @@
                                             <th scope="col">เบอร์โทร</th>
                                             <th scope="col">แอตจาก</th>
                                             <th scope="col">สถานะ</th>
+                                            <th scope="col">สถานะข้อมูล</th>
+                                            <th scope="col">ถูกส่ง</th>
                                             <th scope="col">บันทึกเมื่อ</th>
                                             {{-- <th scope="col">อื่นๆ</th> --}}
                                         </tr>
@@ -76,7 +78,18 @@
                                                         <p class="text-success">อยู่ในคิวแล้ว</p>
                                                     @endif
                                                 </td>
-
+                                                <td class="align-middle">
+                                                    @if ($user->available == 0)
+                                                        <p class="text-dark">ยังไม่ทำรายการ</p>
+                                                    @elseif($user->available == 1)
+                                                        <p class="text-success">ใช้ได้</p>
+                                                    @elseif($user->available == 2)
+                                                        <p class="text-danger">ใช้ไม่ได้</p>
+                                                    @endif
+                                                </td>
+                                                <td class="align-middle">
+                                                    {{ $user->sent_success }}
+                                                </td>
                                                 <td class="align-middle">
                                                     {{ Carbon\Carbon::parse($user->created_at)->locale('th')->diffForHumans() }}
                                                 </td>

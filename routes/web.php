@@ -39,6 +39,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('user/setting/home', [App\Http\Controllers\Setting\SettingController::class, 'index'])->name('user.setting.home');
     Route::post('user/configs/store', [SettingController::class, 'store'])->name('user.configs.store');
     Route::post('user/configs/update_status', [SettingController::class, 'update_status'])->name('user.configs.update_status');
+    Route::post('update_status_otp/{id}', [SettingController::class, 'update_status_otp']);
+    Route::get('user/get_api/setting', [App\Http\Controllers\Setting\SettingController::class, 'get_all_post'])->name('user.get_api.setting');
+    
     //เพิ่มรายชื่อล็อกอิน
     Route::post('user/configs/store_line_login', [SettingController::class, 'store_line_login'])->name('user.configs.store_line_login');
     Route::post('user/get_api/get_addline_login/{id}', [SettingController::class, 'get_addline_login']);

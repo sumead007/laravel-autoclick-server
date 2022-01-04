@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LineLoginOTPController;
 use App\Http\Controllers\LineNotifyController;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -38,4 +39,5 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::resource('config', 'App\Http\Controllers\ConfigController');
     Route::resource('line_login', 'App\Http\Controllers\LineLoginController');
     Route::post('line_notify', [LineNotifyController::class, 'sent_message']);
+    Route::post('update_status_otp/{id}', [LineLoginOTPController::class, 'update_status_otp']);
 });

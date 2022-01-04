@@ -43,7 +43,7 @@
                             <input id='fileid' name="fileid" type='file' accept=".csv, .xlsx" hidden />
                         </form>
                         <br>
-                        <div class="table-responsive-md">
+                        <div class="table-responsive">
                             <table class="table  text-nowrap p-0 " id="table_crud">
                                 <thead class="thead-dark">
                                     <tr align="center">
@@ -52,6 +52,8 @@
                                         <th scope="col">ID</th>
                                         <th scope="col">เบอร์โทร</th>
                                         <th scope="col">แอตจาก</th>
+                                        <th scope="col">สถานะข้อมูล</th>
+                                        <th scope="col">ถูกส่ง</th>
                                         <th scope="col">บันทึกเมื่อ</th>
                                         <th scope="col">อื่นๆ</th>
                                     </tr>
@@ -82,7 +84,18 @@
                                                     เบอร์โทร
                                                 @endif
                                             </td>
-
+                                            <td class="align-middle">
+                                                @if ($user->available == 0)
+                                                    <p class="text-dark">ยังไม่ทำรายการ</p>
+                                                @elseif($user->available == 1)
+                                                    <p class="text-success">ใช้ได้</p>
+                                                @elseif($user->available == 2)
+                                                    <p class="text-danger">ใช้ไม่ได้</p>
+                                                @endif
+                                            </td>
+                                            <td class="align-middle">
+                                                {{ $user->sent_success }}
+                                            </td>
                                             <td class="align-middle">
                                                 {{ Carbon\Carbon::parse($user->created_at)->locale('th')->diffForHumans() }}
                                             </td>

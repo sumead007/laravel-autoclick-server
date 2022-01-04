@@ -18,5 +18,9 @@ class LineLogin extends Model
         'user_login',
         'password',
         'status',
+        'num_add',
+        'otp',
+        'num_chat',
+        'machine',
     ];
 }

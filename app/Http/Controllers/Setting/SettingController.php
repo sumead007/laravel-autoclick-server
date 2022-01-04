@@ -25,7 +25,10 @@ class SettingController extends Controller
     {
         $data = Config::first();
         $datas2 = LineLogin::orderByDesc('created_at')->paginate(10);
-        return view('setting', compact('data', 'datas2'));
+        $chk_datas2 = LineLogin::where("otp", "1");
+        $chk_datas3 = count($chk_datas2->get());
+        $real_data = $chk_datas2->first();
+        return view('setting', compact('data', 'datas2','chk_datas3','real_data'));
     }
 
     public function store(Request $request)
@@ -147,5 +150,13 @@ class SettingController extends Controller
         }
 
         return response()->json(['code' => '200', 'message' => 'บันทึกข้อมูลสำเร็จ', 'data' => ["id" => $request->select, "status" => $request->status]], 200);
+    }
+
+    public function update_status_otp(Request $request, $id)
+    {
+        $data = Config::first();
+        if ($data->status == 1) return response()->json(['code' => '422', 'message' => 'กรุณาปิดการใช้งานก่อน'], 422);
+        LineLogin::find($id)->update(["otp" => $request->otp]);
+        return response()->json(200);
     }
 }

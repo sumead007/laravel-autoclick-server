@@ -14,7 +14,9 @@ class LineLoginController extends Controller
      */
     public function index()
     {
-        $data = LineLogin::where('status', '1')->get();
+        $data = LineLogin::where('status', '1')
+            ->where('otp', 2)
+            ->get();
         return response()->json(['data' => $data], 200);
     }
 
@@ -47,7 +49,8 @@ class LineLoginController extends Controller
      */
     public function show($id)
     {
-        //
+        $data = LineLogin::where('otp', $id)->get();
+        return response()->json(['data' => $data], 200);
     }
 
     /**

@@ -108,7 +108,7 @@
                             </div>
                         </div>
                         <form id="form_second">
-                            <div class="table-responsive-md">
+                            <div class="table-responsive">
                                 <table class="table text-nowrap p-0 " id="table_crud">
                                     <thead class="thead-dark">
                                         <tr align="center">
@@ -116,6 +116,10 @@
                                             <th scope="col">ลำดับ</th>
                                             <th scope="col">ไอดีที่เข้าใช้งาน</th>
                                             <th scope="col">สถานะ</th>
+                                            <th scope="col">จำนวนที่แอต</th>
+                                            <th scope="col">จำนวนแชทที่ส่ง</th>
+                                            <th scope="col">ชื่อเครื่อง</th>
+                                            <th scope="col">ยืนยัน OTP</th>
                                             <th scope="col">บันทึกเมื่อ</th>
                                             <th scope="col">อื่นๆ</th>
                                         </tr>
@@ -145,7 +149,24 @@
                                                         <b class="text-danger">โดนบล็อก</b>
                                                     @endif
                                                 </td>
-
+                                                <td class="align-middle">
+                                                    {{ $user->num_add }}
+                                                </td>
+                                                <td class="align-middle">
+                                                    {{ $user->num_chat }}
+                                                </td>
+                                                <td class="align-middle">
+                                                    {{ $user->machine }}
+                                                </td>
+                                                <td class="align-middle">
+                                                    @if ($user->otp == 2)
+                                                        <b class="text-success">ยืนยันแล้ว</b>
+                                                    @else
+                                                        <a href="javascript:void(0)" class="btn btn-success"
+                                                            onclick="accpt_otp(@json($user->id))" id='btn_edit'>ยืนยัน
+                                                            OTP</a>
+                                                    @endif
+                                                </td>
                                                 <td class="align-middle">
                                                     {{ Carbon\Carbon::parse($user->created_at)->locale('th')->diffForHumans() }}
                                                 </td>
@@ -161,12 +182,12 @@
                                         @endforeach
                                     </tbody>
                                 </table>
-                                <div align="right">
-                                    <a href="javascript:void(0)" onclick="save_btn_select_login(0)"
-                                        class="btn btn-danger">ยกเลิกที่เลือก</a>
-                                    <a href="javascript:void(0)" onclick="save_btn_select_login(1)"
-                                        class="btn btn-success">ใช้งานที่เลือก</a>
-                                </div>
+                            </div>
+                            <div align="right">
+                                <a href="javascript:void(0)" onclick="save_btn_select_login(0)"
+                                    class="btn btn-danger">ยกเลิกที่เลือก</a>
+                                <a href="javascript:void(0)" onclick="save_btn_select_login(1)"
+                                    class="btn btn-success">ใช้งานที่เลือก</a>
                             </div>
                         </form>
                         <div class="d-flex justify-content-center">
@@ -186,7 +207,6 @@
             </div>
         </div>
     </div>
-
 
     {{-- modal store --}}
     <div class="modal fade" id="post-modal" aria-hidden="true">
@@ -226,6 +246,102 @@
     </div>
 
     <script>
+        window.onload = async function(e) {
+            // let status = JSON.parse("{{ json_encode($chk_datas3) }}");
+            // let real_data = JSON.parse("{{ json_encode($real_data) }}");
+            let status = {!! json_encode($chk_datas3) !!};
+            let real_data = {!! json_encode($real_data) !!};
+            // console.log(real_data);
+            if (status > 0) {
+
+                setTimeout(function() {
+                    window.location.reload(1);
+                }, 5000);
+                Swal.fire({
+                    title: 'กรุณายืนยัน OTP ก่อนใช้งาน!!',
+                    text: 'ของไอดีชื่อ: ' + real_data.user_login,
+                    imageUrl: '{{ asset($data->image_screen_shot) }}',
+                    imageWidth: 400,
+                    imageHeight: 200,
+                    imageAlt: 'Custom image',
+                    allowOutsideClick: false,
+                    confirmButtonText: 'ยกเลิกOTP',
+                    confirmButtonColor: '#d33',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // console.log("accept");
+                        let _url = "/update_status_otp/" + real_data.id;
+                        $.ajax({
+                            url: _url,
+                            type: "POST",
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            timeout: 600000,
+                            data: {
+                                "otp": 0,
+                            },
+                            success: function(res) {
+                                // console.log(res);
+                                window.location.reload(1);
+
+                            },
+                            error: function(err) {
+                                Swal.fire(
+                                    'มีข้อผิดพลาด!',
+                                    err.responseJSON.message,
+                                    'error'
+                                )
+                                // clear_ms_error();
+                                // $('#user_loginError').text(err.responseJSON.errors.user_login);
+                                // $('#passwordError').text(err.responseJSON.errors.password);
+
+                            }
+                        });
+                    }
+                })
+            }
+
+        }
+
+        function accpt_otp(id) {
+            let _url = "/update_status_otp/" + id;
+            $.ajax({
+                url: _url,
+                type: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                timeout: 600000,
+                data: {
+                    "otp": 1,
+                },
+                success: function(res) {
+                    // console.log(res);
+                    window.location.reload(1);
+
+                    // Swal.fire(
+                    //     'สำเร็จ!',
+                    //     'บันทึกข้อมูลสำเร็จ',
+                    //     'success'
+                    // ).then(function() {
+
+                    // })
+                },
+                error: function(err) {
+                    Swal.fire(
+                        'มีข้อผิดพลาด!',
+                        err.responseJSON.message,
+                        'error'
+                    )
+                    // clear_ms_error();
+                    // $('#user_loginError').text(err.responseJSON.errors.user_login);
+                    // $('#passwordError').text(err.responseJSON.errors.password);
+
+                }
+            });
+        }
+
         function save_btn_select_login(val) {
             // console.log("test");
             Swal.fire({
@@ -360,6 +476,20 @@
                                             </td>
                                             <td class="align-middle">
                                                 <b class="text-black-50">ไม่ถูกใช้งาน</b>
+                                            </td>
+                                            <td class="align-middle">
+                                               0
+                                            </td>
+                                            <td class="align-middle">
+                                                0
+                                            </td>
+                                            <td class="align-middle">
+                                                
+                                            </td>
+                                            <td class="align-middle">
+                                                <a href="javascript:void(0)" class="btn btn-success"
+                                                            onclick="accpt_otp(${res.data.created_at_2})" id='btn_edit'>ยืนยัน
+                                                            OTP</a>
                                             </td>
                                             <td class="align-middle">
                                                 ${res.data.created_at_2}

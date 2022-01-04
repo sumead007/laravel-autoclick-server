@@ -23,12 +23,20 @@ class SettingController extends Controller
 
     public function index()
     {
+
         $data = Config::first();
         $datas2 = LineLogin::orderByDesc('created_at')->paginate(10);
         $chk_datas2 = LineLogin::where("otp", "1");
         $chk_datas3 = count($chk_datas2->get());
         $real_data = $chk_datas2->first();
-        return view('setting', compact('data', 'datas2','chk_datas3','real_data'));
+        // return dd($real_data, $data);
+        if (@$real_data->updated_at < @$data->updated_at) {
+            $data->image_screen_shot2 = asset($data->image_screen_shot);
+        }else{
+            $data->image_screen_shot2 = asset('/images/loading/1.gif');
+        }
+
+        return view('setting', compact('data', 'datas2', 'chk_datas3', 'real_data'));
     }
 
     public function store(Request $request)

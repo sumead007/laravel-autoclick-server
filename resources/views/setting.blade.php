@@ -260,7 +260,7 @@
                 Swal.fire({
                     title: 'กรุณายืนยัน OTP ก่อนใช้งาน!!',
                     text: 'ของไอดีชื่อ: ' + real_data.user_login,
-                    imageUrl: '{{ asset($data->image_screen_shot) }}',
+                    imageUrl: '{{ asset($data->image_screen_shot2) }}',
                     imageWidth: 400,
                     imageHeight: 200,
                     imageAlt: 'Custom image',

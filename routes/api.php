@@ -40,4 +40,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::resource('line_login', 'App\Http\Controllers\LineLoginController');
     Route::post('line_notify', [LineNotifyController::class, 'sent_message']);
     Route::post('update_status_otp/{id}', [LineLoginOTPController::class, 'update_status_otp']);
+    Route::resource('line_login_otp', 'App\Http\Controllers\LineLoginResourceController');
+
 });

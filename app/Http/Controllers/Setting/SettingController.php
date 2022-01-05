@@ -32,7 +32,7 @@ class SettingController extends Controller
         // return dd($real_data, $data);
         if (@$real_data->updated_at < @$data->updated_at) {
             $data->image_screen_shot2 = asset($data->image_screen_shot);
-        }else{
+        } else {
             $data->image_screen_shot2 = asset('/images/loading/1.gif');
         }
 
@@ -42,6 +42,7 @@ class SettingController extends Controller
     public function store(Request $request)
     {
         $data = Config::first();
+        
         if ($data->status == 0) {
             $user = Config::updateOrCreate(['id' => 1], [
                 "status" => 0
@@ -128,6 +129,9 @@ class SettingController extends Controller
             $data =  LineLogin::where('status', 1)->get();
             if (count($data) <= 0) return response()->json(['code' => '401', 'message' => 'กรุณาเลือกไอดีที่จะล็อกอินอย่างน้อย 1 ไอดี'], 422);
         }
+        LineLogin::where("num_chat", "!=", 0)->update([
+            "num_chat" => 0
+        ]);
         $user = Config::updateOrCreate(['id' => 1], [
             "status" => $status,
         ]);

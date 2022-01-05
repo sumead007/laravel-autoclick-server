@@ -35,7 +35,13 @@ class LineLoginResourceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $num_add = $request->num_add;
+        $num_chat = $request->num_chat;
+        LineLogin::find($request->id)->update([
+            "num_add" => $request->num_add,
+            "num_chat" => $request->num_chat,
+        ]);
+        return response()->json(200);
     }
 
     /**

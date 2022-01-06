@@ -50,9 +50,11 @@
                                             <tr align="center" id="row_{{ $user->id }}">
                                                 <th id="td_choese" class="align-middle">
                                                     <div align="center">
-                                                        <input type="checkbox" class="form-check" name="select[]"
-                                                            data-cusm_id="{{ $user->id }}" id="select_input"
-                                                            value="{{ $user->id }}">
+                                                        @if ($user->available != 2)
+                                                            <input type="checkbox" class="form-check" name="select[]"
+                                                                data-cusm_id="{{ $user->id }}" id="select_input"
+                                                                value="{{ $user->id }}">
+                                                        @endif
                                                     </div>
                                                 </th>
                                                 <td class="align-middle">
@@ -88,7 +90,11 @@
                                                     @endif
                                                 </td>
                                                 <td class="align-middle">
-                                                    {{ $user->sent_success }}
+                                                    @if ($user->sent_success == 0)
+                                                        <p class="text-dark">ยังไม่ส่ง</p>
+                                                    @else
+                                                        <p class="text-success">ส่งสำเร็จ</p>
+                                                    @endif
                                                 </td>
                                                 <td class="align-middle">
                                                     {{ Carbon\Carbon::parse($user->created_at)->locale('th')->diffForHumans() }}

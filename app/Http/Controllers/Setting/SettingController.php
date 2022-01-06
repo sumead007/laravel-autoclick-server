@@ -42,7 +42,7 @@ class SettingController extends Controller
     public function store(Request $request)
     {
         $data = Config::first();
-        
+
         if ($data->status == 0) {
             $user = Config::updateOrCreate(['id' => 1], [
                 "status" => 0
@@ -131,6 +131,9 @@ class SettingController extends Controller
         }
         LineLogin::where("num_chat", "!=", 0)->update([
             "num_chat" => 0
+        ]);
+        Line::where("sent_success", "!=", 0)->update([
+            "sent_success" => 0
         ]);
         $user = Config::updateOrCreate(['id' => 1], [
             "status" => $status,

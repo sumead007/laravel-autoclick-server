@@ -53,7 +53,6 @@
                                         <th scope="col">เบอร์โทร</th>
                                         <th scope="col">แอตจาก</th>
                                         <th scope="col">สถานะข้อมูล</th>
-                                        <th scope="col">ถูกส่ง</th>
                                         <th scope="col">บันทึกเมื่อ</th>
                                         <th scope="col">อื่นๆ</th>
                                     </tr>
@@ -92,9 +91,6 @@
                                                 @elseif($user->available == 2)
                                                     <p class="text-danger">ใช้ไม่ได้</p>
                                                 @endif
-                                            </td>
-                                            <td class="align-middle">
-                                                {{ $user->sent_success }}
                                             </td>
                                             <td class="align-middle">
                                                 {{ Carbon\Carbon::parse($user->created_at)->locale('th')->diffForHumans() }}
@@ -417,11 +413,12 @@
                                             <td class="align-middle">
                                                 ${status}
                                             </td>
-
+                                            <td class="align-middle">
+                                                <p class="text-dark">ยังไม่ทำรายการ</p>
+                                            </td>
                                             <td class="align-middle">
                                                 ${res.data.created_at_2}
                                             </td>
-
                                             <td class="align-middle" align="center">
                                                 <a href="javascript:void(0)" class="btn btn-warning"
                                                     onclick="editPost(${res.data.id})" id='btn_edit'>แก้ไข</a>

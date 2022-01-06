@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Line;
 use Illuminate\Http\Request;
 
-class AddlineController extends Controller
+class LineStatusController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,10 +14,7 @@ class AddlineController extends Controller
      */
     public function index()
     {
-        $data = Line::where('status', '0')
-            ->where("available", "!=", 2)
-            ->get();
-        return response()->json(['data' => $data], 200);
+        //
     }
 
     /**
@@ -38,21 +35,9 @@ class AddlineController extends Controller
      */
     public function store(Request $request)
     {
-        $type = $request->type;
-        $user_data = $request->user_data;
-        if ($type == '0') {
-            Line::find($request->id)->update([
-                "type" => $type,
-                "user_id" => $user_data,
-            ]);
-        } else {
-            Line::find($request->id)->update([
-                "type" => $type,
-                "user_tel" => $user_data,
-            ]);
-        }
-
-        return response()->json(200);
+        $id = $request->id;
+        $status = $request->status;
+        Line::find($id)->update(["available" => $status]);
     }
 
     /**
@@ -86,8 +71,8 @@ class AddlineController extends Controller
      */
     public function update(Request $request, $id)
     {
-        Line::find($id)->update(["status" => 1]);
-        return response()->json(200);
+        $status = $request->status;
+        Line::find($id)->update(["sent_success" => $status]);
     }
 
     /**

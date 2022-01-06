@@ -74,7 +74,7 @@ class AddlineController extends Controller
      */
     public function edit($id)
     {
-        //
+        Line::find($id)->update(["available" => 2]);
     }
 
     /**

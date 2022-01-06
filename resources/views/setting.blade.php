@@ -488,7 +488,7 @@
                                             </td>
                                             <td class="align-middle">
                                                 <a href="javascript:void(0)" class="btn btn-success"
-                                                            onclick="accpt_otp(${res.data.created_at_2})" id='btn_edit'>ยืนยัน
+                                                            onclick="accpt_otp(${res.data.id})" id='btn_edit'>ยืนยัน
                                                             OTP</a>
                                             </td>
                                             <td class="align-middle">

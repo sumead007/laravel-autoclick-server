@@ -76,6 +76,9 @@
                         @elseif($data->action== 4)
                             <span class="text-danger" id="text_action">ล็อกอินไม่สำเร็จ</span>
                         @endif
+                        <br>
+                        ส่งสำเร็จ: {{$sum_sent_success}} คน
+
                         <div align="right">
                             @if ($data->status == 1)
                                 <a href="javascript:void(0)" onclick="config(this)" data-status="1"

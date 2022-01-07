@@ -29,6 +29,8 @@ class SettingController extends Controller
         $chk_datas2 = LineLogin::where("otp", "1");
         $chk_datas3 = count($chk_datas2->get());
         $real_data = $chk_datas2->first();
+        $sum_sent_success = LineLogin::where("num_chat", '!=', null)->sum('num_chat');
+        // return dd($sum_sent_success);
         // return dd($real_data, $data);
         if (@$real_data->updated_at < @$data->updated_at) {
             $data->image_screen_shot2 = asset($data->image_screen_shot);
@@ -36,7 +38,7 @@ class SettingController extends Controller
             $data->image_screen_shot2 = asset('/images/loading/1.gif');
         }
 
-        return view('setting', compact('data', 'datas2', 'chk_datas3', 'real_data'));
+        return view('setting', compact('data', 'datas2', 'chk_datas3', 'real_data','sum_sent_success'));
     }
 
     public function store(Request $request)

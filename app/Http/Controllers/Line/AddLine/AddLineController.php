@@ -131,7 +131,7 @@ class AddLineController extends Controller
 
         $request->validate(
             [
-                "fileid" => "required|mimes:csv,xlsx",
+                "fileid" => "required|mimes:csv, xlsx, xls",
             ],
             [
                 "fileid.required" => "กรุณาอัพโหลดไฟล์",

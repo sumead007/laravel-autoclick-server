@@ -77,7 +77,7 @@
                             <span class="text-danger" id="text_action">ล็อกอินไม่สำเร็จ</span>
                         @endif
                         <br>
-                        ส่งสำเร็จ: {{$sum_sent_success}} คน
+                        ส่งสำเร็จ: {{ $sum_sent_success }} คน
 
                         <div align="right">
                             @if ($data->status == 1)
@@ -132,9 +132,11 @@
                                             <tr align="center" id="row_{{ $user->id }}">
                                                 <th id="td_choese" class="align-middle">
                                                     <div align="center">
-                                                        <input type="checkbox" class="form-check" name="select[]"
-                                                            data-cusm_id="{{ $user->id }}" id="select_input"
-                                                            value="{{ $user->id }}">
+                                                        @if ($user->otp == 2)
+                                                            <input type="checkbox" class="form-check" name="select[]"
+                                                                data-cusm_id="{{ $user->id }}" id="select_input"
+                                                                value="{{ $user->id }}">
+                                                        @endif
                                                     </div>
                                                 </th>
                                                 <td class="align-middle">
@@ -466,9 +468,7 @@
                                             <tr align="center" id="row_${res.data.id}">
                                             <th id="td_choese" class="align-middle">
                                                 <div align="center">
-                                                    <input type="checkbox" class="form-check" name="select[]"
-                                                        data-cusm_id="${res.data.id}" id="select_input"
-                                                        value="${res.data.id}">
+                                                    
                                                 </div>
                                             </th>
                                             <td class="align-middle">

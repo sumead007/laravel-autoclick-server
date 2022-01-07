@@ -139,6 +139,6 @@ class AddLineController extends Controller
             ]
         );
         Excel::import(new LineImport(), $request->file('fileid')->store('temp'));
-        return response()->json(['sucess' => "ลบข้อมูลเรียบร้อย"], 200);
+        return response()->json(['sucess' => "เพิ่มข้อมูลเรียบร้อย"], 200);
     }
 }

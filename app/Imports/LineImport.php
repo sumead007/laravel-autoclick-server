@@ -6,8 +6,9 @@ use App\Models\Line;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
 
-class LineImport implements ToCollection
+class LineImport implements ToCollection, WithCalculatedFormulas
 {
     public function collection(Collection $rows)
     {
@@ -21,7 +22,11 @@ class LineImport implements ToCollection
             if ($row->filter()->isNotEmpty()) {
                 $user_id = trim($row[1]);
                 $user_tel = trim($row[0]);
-                $new_user_tel = $user_tel[0] != "0" ? "0" . $user_tel : $user_tel;
+                if (!empty($user_tel)) {
+                    $new_user_tel = $user_tel[0] != "0" ? "0" . $user_tel : $user_tel;
+                }else{
+                    $new_user_tel = "";
+                }
                 #ไม่เพิ่มอันซํ้า
                 $chk_user_id = Line::where(["user_id" => $user_id])->get();
                 $chk_user_tel = Line::where(["user_tel" => $new_user_tel])->get();

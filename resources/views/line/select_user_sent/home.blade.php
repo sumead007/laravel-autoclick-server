@@ -22,7 +22,7 @@
                             </a> --}}
 
                             <a href="javascript:void(0)" class="btn btn-success" id="select_all"
-                                onclick="select_all()">เลือกทั้งหมด</a>
+                                onclick="select_all()">เลือกทั้งหมดในหน้านี้</a>
                             <a href="javascript:void(0)" class="btn btn-info" id="reset_select"
                                 onclick="reset_select()">รีเซต</a>
                         </div>

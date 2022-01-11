@@ -37,8 +37,7 @@ class SettingController extends Controller
         } else {
             $data->image_screen_shot2 = asset('/images/loading/1.gif');
         }
-
-        return view('setting', compact('data', 'datas2', 'chk_datas3', 'real_data','sum_sent_success'));
+        return view('setting', compact('data', 'datas2', 'chk_datas3', 'real_data', 'sum_sent_success'));
     }
 
     public function store(Request $request)
@@ -140,6 +139,9 @@ class SettingController extends Controller
         $user = Config::updateOrCreate(['id' => 1], [
             "status" => $status,
         ]);
+
+        $time = Carbon::parse(Carbon::now())->addSeconds(60)->format('H:i:s');
+        session(["time_count" => $time]);
         return response()->json(['code' => '200', 'message' => 'บันทึกข้อมูลสำเร็จ', 'data' => $status], 200);
     }
 

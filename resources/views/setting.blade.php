@@ -67,13 +67,13 @@
                         {{ __('เหตุการณ์:') }}
                         @if ($data->action == 0)
                             <span class="text-dark" id="text_action">เริ่มต้นหรือยังไม่ได้ล็อกอิน</span>
-                        @elseif($data->action== 1)
+                        @elseif($data->action == 1)
                             <span class="text-info" id="text_action">กำลังรอ OTP</span>
-                        @elseif($data->action== 2)
+                        @elseif($data->action == 2)
                             <span class="text-success" id="text_action">กำลังทำงาน</span>
-                        @elseif($data->action== 3)
+                        @elseif($data->action == 3)
                             <span class="text-danger" id="text_action">จบการทำงาน</span>
-                        @elseif($data->action== 4)
+                        @elseif($data->action == 4)
                             <span class="text-danger" id="text_action">ล็อกอินไม่สำเร็จ</span>
                         @endif
                         <br>
@@ -85,7 +85,8 @@
                                     class="btn btn-danger">ปิดใช้งาน</a>
                             @else
                                 <a href="javascript:void(0)" onclick="config(this)" data-status="0"
-                                    class="btn btn-primary">เปิดใช้งาน</a>
+                                    class="btn btn-primary">เปิดใช้งาน</a> 
+                                <div id="countdown" class="mt-3"></div>
                             @endif
                         </div>
                     </div>
@@ -100,7 +101,7 @@
                         <div class="d-flex justify-content-between m-1">
                             <div>
                                 <a href="javascript:void(0)" class="btn btn-success" id="select_all"
-                                    onclick="select_all()">เลือกทั้งหมด</a>
+                                    onclick="select_all()">เลือกทั้งหมดในหน้านี้</a>
                                 <a href="javascript:void(0)" class="btn btn-info" id="reset_select"
                                     onclick="reset_select()">รีเซต</a>
                             </div>
@@ -251,6 +252,17 @@
     </div>
 
     <script>
+        var timeleft = 60;
+        var downloadTimer = setInterval(function() {
+            if (timeleft <= 0) {
+                clearInterval(downloadTimer);
+                document.getElementById("countdown").innerHTML = "ใช้งานได้";
+            } else {
+                document.getElementById("countdown").innerHTML = "อีก "+timeleft + " วินาที ปุ่มถึงจะใช้งานได้อีกครั้ง";
+            }
+            timeleft -= 1;
+        }, 1000);
+
         window.onload = async function(e) {
             // let status = JSON.parse("{{ json_encode($chk_datas3) }}");
             // let real_data = JSON.parse("{{ json_encode($real_data) }}");

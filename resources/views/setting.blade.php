@@ -2,6 +2,12 @@
 
 @section('content')
     <style>
+        a[disabled] {
+            pointer-events: none !important;
+            cursor: not-allowed;
+            color: Gray;
+        }
+
         /* Chat containers */
         .container1 {
             border: 2px solid #dedede;
@@ -81,13 +87,14 @@
 
                         <div align="right">
                             @if ($data->status == 1)
-                                <a href="javascript:void(0)" onclick="config(this)" data-status="1"
-                                    class="btn btn-danger">ปิดใช้งาน</a>
+                                <a href="javascript:void(0)" onclick="config(this)" data-status="1" class="btn btn-danger"
+                                    id="btn_turn_nf" disabled="true">ปิดใช้งาน</a>
                             @else
-                                <a href="javascript:void(0)" onclick="config(this)" data-status="0"
-                                    class="btn btn-primary">เปิดใช้งาน</a> 
-                                <div id="countdown" class="mt-3"></div>
+                                <a href="javascript:void(0)" onclick="config(this)" data-status="0" class="btn btn-primary"
+                                    id="btn_turn_nf" disabled="true">เปิดใช้งาน</a>
                             @endif
+                            <div id="countdown" class="mt-3"></div>
+
                         </div>
                     </div>
 
@@ -250,20 +257,25 @@
             </div>
         </div>
     </div>
-
     <script>
-        var timeleft = 60;
-        var downloadTimer = setInterval(function() {
-            if (timeleft <= 0) {
-                clearInterval(downloadTimer);
-                document.getElementById("countdown").innerHTML = "ใช้งานได้";
-            } else {
-                document.getElementById("countdown").innerHTML = "อีก "+timeleft + " วินาที ปุ่มถึงจะใช้งานได้อีกครั้ง";
-            }
-            timeleft -= 1;
-        }, 1000);
+        function time_delay(val) {
+            let timeleft = val == null ? 0 : val;
+            var downloadTimer = setInterval(function() {
+                if (timeleft <= 0) {
+                    clearInterval(downloadTimer);
+                    document.getElementById("countdown").innerHTML = "<i class='text-success'>ใช้งานได้</i>";
+                    $("#btn_turn_nf").attr("disabled", false)
+                } else {
+                    document.getElementById("countdown").innerHTML = "<i class='text-danger'>" + "อีก " + timeleft +
+                        " วินาที ปุ่มถึงจะใช้งานได้อีกครั้ง" + "</i>";
+                    $("#btn_turn_nf").attr("disabled", true)
+                }
+                timeleft -= 1;
+            }, 1000);
+        }
 
         window.onload = async function(e) {
+            time_delay("{{ Session::get('time_count') }}")
             // let status = JSON.parse("{{ json_encode($chk_datas3) }}");
             // let real_data = JSON.parse("{{ json_encode($real_data) }}");
             let status = {!! json_encode($chk_datas3) !!};
@@ -671,6 +683,8 @@
                         },
                         success: function(res) {
                             // console.log(res);
+                            time_delay(60)
+
                             if (res) {
 
                                 $(val).attr('data-status', res.data);
@@ -692,7 +706,6 @@
                                 $("#text_action").html('กำลังดำเนินการ...');
                                 $("#text_action").attr('class', 'text-Secondary');
                                 setTimeout(continueExecution, 30000)
-
                                 Swal.fire(
                                     'สำเร็จ!',
                                     res.message,

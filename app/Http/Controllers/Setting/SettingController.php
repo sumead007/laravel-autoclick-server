@@ -37,7 +37,22 @@ class SettingController extends Controller
         } else {
             $data->image_screen_shot2 = asset('/images/loading/1.gif');
         }
+        $this->time_delay();
         return view('setting', compact('data', 'datas2', 'chk_datas3', 'real_data', 'sum_sent_success'));
+    }
+
+    public function time_delay()
+    {
+        $finishTime = session()->get("finish_time");
+        $startTime = Carbon::parse(Carbon::now());
+
+        if ($finishTime != null && $startTime <= $finishTime) {
+            $totalDuration = $finishTime->diffInSeconds($startTime);
+            session()->put("time_count",  $totalDuration);
+        } else {
+            session()->put("time_count", 0);
+        }
+        return null;
     }
 
     public function store(Request $request)
@@ -139,11 +154,12 @@ class SettingController extends Controller
         $user = Config::updateOrCreate(['id' => 1], [
             "status" => $status,
         ]);
-
-        $time = Carbon::parse(Carbon::now())->addSeconds(60)->format('H:i:s');
-        session(["time_count" => $time]);
+        $finishTime = Carbon::parse(Carbon::now())->addSeconds(60);
+        session()->put("finish_time", $finishTime);
         return response()->json(['code' => '200', 'message' => 'บันทึกข้อมูลสำเร็จ', 'data' => $status], 200);
     }
+
+
 
     public function delete_post($id)
     {
@@ -170,6 +186,8 @@ class SettingController extends Controller
 
         return response()->json(['code' => '200', 'message' => 'บันทึกข้อมูลสำเร็จ', 'data' => ["id" => $request->select, "status" => $request->status]], 200);
     }
+
+
 
     public function update_status_otp(Request $request, $id)
     {

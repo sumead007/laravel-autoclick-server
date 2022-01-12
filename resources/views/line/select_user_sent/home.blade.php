@@ -92,8 +92,10 @@
                                                 <td class="align-middle">
                                                     @if ($user->sent_success == 0)
                                                         <p class="text-dark">ยังไม่ส่ง</p>
-                                                    @else
+                                                    @elseif($user->sent_success == 1)
                                                         <p class="text-success">ส่งสำเร็จ</p>
+                                                    @else
+                                                        <p class="text-danger">ส่งไม่สำเร็จ</p>
                                                     @endif
                                                 </td>
                                                 <td class="align-middle">

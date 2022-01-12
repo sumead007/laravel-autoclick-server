@@ -22,7 +22,7 @@ class AddColumnOtpChatMachTbLineLogins extends Migration
 
         Schema::table('lines', function (Blueprint $table) {
             $table->integer('available')->after('status')->default(0)->comment = "(ไลน์นี้ใช้ได้มั้ย) 0=เริ่มต้น 1=ใช้ได้ 2=ใช้ไม่ได้";
-            $table->integer('sent_success')->after('available')->default(0)->comment = "(ส่งสำเร็จมั้ย) 0=ยังไม่ส่ง 1=ส่งสำเร็จ";
+            $table->integer('sent_success')->after('available')->default(0)->comment = "(ส่งสำเร็จมั้ย) 0=ยังไม่ส่ง 1=ส่งสำเร็จ 2=ส่งไม่สำเร็จ";
         });
     }
 

@@ -20,6 +20,8 @@ class Config extends Model
         'type',
         'status',
         'image_screen_shot',
-        'action'
+        'action',
+        'queue_num',
+        'queue_total',
     ];
 }

@@ -23,13 +23,14 @@ class SettingController extends Controller
 
     public function index()
     {
-
+// return dd(Line::where('status', 0)->count());
         $data = Config::first();
         $datas2 = LineLogin::orderByDesc('created_at')->paginate(10);
         $chk_datas2 = LineLogin::where("otp", "1");
         $chk_datas3 = count($chk_datas2->get());
         $real_data = $chk_datas2->first();
-        $sum_sent_success = LineLogin::where("num_chat", '!=', null)->sum('num_chat');
+        $sum_sent_success = Line::where("sent_success",  1)->count('sent_success');
+        $sum_sent_nonsuccess = Line::where("sent_success",  2)->count('sent_success');
         // return dd($sum_sent_success);
         // return dd($real_data, $data);
         if (@$real_data->updated_at < @$data->updated_at) {
@@ -38,7 +39,7 @@ class SettingController extends Controller
             $data->image_screen_shot2 = asset('/images/loading/1.gif');
         }
         $this->time_delay();
-        return view('setting', compact('data', 'datas2', 'chk_datas3', 'real_data', 'sum_sent_success'));
+        return view('setting', compact('data', 'datas2', 'chk_datas3', 'real_data', 'sum_sent_success', 'sum_sent_nonsuccess'));
     }
 
     public function time_delay()
@@ -151,9 +152,25 @@ class SettingController extends Controller
         Line::where("sent_success", "!=", 0)->update([
             "sent_success" => 0
         ]);
-        $user = Config::updateOrCreate(['id' => 1], [
-            "status" => $status,
-        ]);
+
+
+        if ($status == 0) {
+            $user = Config::updateOrCreate(['id' => 1], [
+                "status" => $status,
+                "queue_total" => 0,
+                "queue_num" => 0,
+            ]);
+        } else {
+            $num = Line::where('status', 0)->count();
+            $user = Config::updateOrCreate(['id' => 1], [
+                "status" => $status,
+                "queue_total" => $num,
+                "queue_num" => 0,
+            ]);
+        }
+
+
+        //เวลาล่าสุดที่กด
         $finishTime = Carbon::parse(Carbon::now())->addSeconds(60);
         session()->put("finish_time", $finishTime);
         return response()->json(['code' => '200', 'message' => 'บันทึกข้อมูลสำเร็จ', 'data' => $status], 200);

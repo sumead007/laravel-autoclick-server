@@ -83,7 +83,9 @@
                             <span class="text-danger" id="text_action">ล็อกอินไม่สำเร็จ</span>
                         @endif
                         <br>
-                        ส่งสำเร็จ: {{ $sum_sent_success }} คน
+                        <div><span class="text-dark">ลำดับการส่ง</span> : {{$sum_sent_success+$sum_sent_nonsuccess}}/{{$data->queue_total}} คน</div>
+                        <div><span class="text-success">ส่งสำเร็จ</span> : {{ $sum_sent_success }} คน</div>
+                        <div><span class="text-danger">ส่งไม่สำเร็จ</span> : {{ $sum_sent_nonsuccess }} คน</div>
 
                         <div align="right">
                             @if ($data->status == 1)

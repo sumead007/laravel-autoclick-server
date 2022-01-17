@@ -16,6 +16,7 @@ class AddlineController extends Controller
     {
         $data = Line::where('status', '0')
             ->where("available", "!=", 2)
+            ->limit(1000)
             ->get();
         return response()->json(['data' => $data], 200);
     }

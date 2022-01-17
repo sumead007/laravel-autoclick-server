@@ -3,6 +3,7 @@
 use App\Http\Controllers\Line\AddLine\AddLineController;
 use App\Http\Controllers\Line\SelectUserSent\SelectUserSentController;
 use App\Http\Controllers\Setting\SettingController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -60,4 +61,11 @@ Route::middleware(['auth'])->group(function () {
     //select_user_sent
     Route::get('user/select_user_sent/home', [SelectUserSentController::class, 'index'])->name('user.select_user_sent.home');
     Route::post('user/select_user_sent/store', [SelectUserSentController::class, 'store'])->name('user.select_user_sent.store');
+});
+
+Route::get('/clear-cache', function() {
+    $exitCode = Artisan::call('config:clear');
+    $exitCode = Artisan::call('cache:clear');
+    $exitCode = Artisan::call('config:cache');
+    return 'DONE'; //Return anything
 });

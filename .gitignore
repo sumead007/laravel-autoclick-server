@@ -15,3 +15,5 @@ yarn-error.log
 /.vscode
 .DS_Store
 resources/views/line/.DS_Store
+database/.DS_Store
+.DS_Store

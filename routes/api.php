@@ -43,4 +43,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::resource('line_login_otp', 'App\Http\Controllers\LineLoginResourceController');
     Route::resource('line_status', 'App\Http\Controllers\LineStatusController');
 
+    Route::get('get_all_post', [LineLoginOTPController::class, 'get_all_post']);
+
 });

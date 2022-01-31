@@ -28,7 +28,7 @@ class LineLoginOTPController extends Controller
 
     public function get_all_post()
     {
-        $datas = LineLogin::where("otp", "1");
+        $datas = LineLogin::where("otp", "0")->get();
         return response()->json($datas);
     }
 }

@@ -23,7 +23,7 @@ class SettingController extends Controller
 
     public function index()
     {
-// return dd(Line::where('status', 0)->count());
+        // return dd(Line::where('status', 0)->count());
         $data = Config::first();
         $datas2 = LineLogin::orderByDesc('created_at')->paginate(10);
         $chk_datas2 = LineLogin::where("otp", "1");
@@ -31,15 +31,19 @@ class SettingController extends Controller
         $real_data = $chk_datas2->first();
         $sum_sent_success = Line::where("sent_success",  1)->count('sent_success');
         $sum_sent_nonsuccess = Line::where("sent_success",  2)->count('sent_success');
+        $sum_user_used_line = LineLogin::where('status', 1)
+            ->where('otp', 2)
+            ->count('id');
+        // return dd($sum_user_used_line);
         // return dd($sum_sent_success);
         // return dd($real_data, $data);
-        if (@$real_data->updated_at < @$data->updated_at) {
+        if (@$real_data->updated_at < @$data->updated_at && $data->action == 1) {
             $data->image_screen_shot2 = asset($data->image_screen_shot);
         } else {
             $data->image_screen_shot2 = asset('/images/loading/1.gif');
         }
         $this->time_delay();
-        return view('setting', compact('data', 'datas2', 'chk_datas3', 'real_data', 'sum_sent_success', 'sum_sent_nonsuccess'));
+        return view('setting', compact('data', 'datas2', 'chk_datas3', 'real_data', 'sum_sent_success', 'sum_sent_nonsuccess', 'sum_user_used_line'));
     }
 
     public function time_delay()
@@ -211,6 +215,11 @@ class SettingController extends Controller
         $data = Config::first();
         if ($data->status == 1) return response()->json(['code' => '422', 'message' => 'กรุณาปิดการใช้งานก่อน'], 422);
         LineLogin::find($id)->update(["otp" => $request->otp]);
+        if ($request->otp == 1) {
+            $data->update(['action' => 1]);
+        }else {
+            $data->update(['action' => 4]);
+        }
         return response()->json(200);
     }
 }

@@ -83,10 +83,15 @@
                             <span class="text-danger" id="text_action">ล็อกอินไม่สำเร็จ</span>
                         @endif
                         <br>
-                        <div><span class="text-dark">ลำดับการส่ง</span> : {{$sum_sent_success+$sum_sent_nonsuccess}}/{{$data->queue_total}} คน</div>
+                        <div><span class="text-dark">ลำดับการส่ง</span> :
+                            {{ $sum_sent_success + $sum_sent_nonsuccess }}/{{ $data->queue_total }} คน</div>
                         <div><span class="text-success">ส่งสำเร็จ</span> : {{ $sum_sent_success }} คน</div>
                         <div><span class="text-danger">ส่งไม่สำเร็จ</span> : {{ $sum_sent_nonsuccess }} คน</div>
-
+                        {{-- <br> --}}
+                        @if ($sum_user_used_line < 40)
+                            <b class="text-danger" id="text_action">คำเตือน!! ข้อมูลที่เข้าใช้ไลน์ต้องมากกว่า 40 ID
+                                ขึ้นไป</b>
+                        @endif
                         <div align="right">
                             @if ($data->status == 1)
                                 <a href="javascript:void(0)" onclick="config(this)" data-status="1" class="btn btn-danger"
@@ -282,6 +287,13 @@
             // let real_data = JSON.parse("{{ json_encode($real_data) }}");
             let status = {!! json_encode($chk_datas3) !!};
             let real_data = {!! json_encode($real_data) !!};
+            let action = {!! json_encode($data->action) !!};
+            let text_action = "<b class='text-success'>รอสักครู่<b/>";
+            if (action == 1) {
+                text_action = "<b class='text-primary'>กำลังรอ OTP</b>"
+            } else if (action == 4) {
+                text_action = "<b class='text-danger'>ล็อกอินไม่สำเร็จ</b>"
+            }
             // console.log(real_data);
             if (status > 0) {
 
@@ -290,7 +302,7 @@
                 }, 5000);
                 Swal.fire({
                     title: 'กรุณายืนยัน OTP ก่อนใช้งาน!!',
-                    text: 'ของไอดีชื่อ: ' + real_data.user_login,
+                    html: 'ของไอดีชื่อ: ' + real_data.user_login + "<br> <b>สถานะ: " + text_action + "</b>",
                     imageUrl: '{{ asset($data->image_screen_shot2) }}',
                     imageWidth: 400,
                     imageHeight: 200,
@@ -660,11 +672,14 @@
 
         function config(val) {
             var status = $(val).attr('data-status');
-            // console.log(status);
+            let text_html = (status == 0) ?
+                "คุณต้องการเปิดใช่หรือไม่? <br> <b class='text-danger'>คำเตือน!! ข้อมูลที่เข้าใช้ไลน์ต้องมากกว่า 40 ID ขึ้นไป</b>" :
+                "คุณต้องการปิดใช่หรือไม่?"
+
 
             Swal.fire({
                 title: 'คุณแน่ใจใช่หรือไม่?',
-                text: "คุณต้องการเปลี่ยนสถานะใช่หรือไม่?",
+                html: text_html,
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',

@@ -92,6 +92,9 @@
                             <b class="text-danger" id="text_action">คำเตือน!! ข้อมูลที่เข้าใช้ไลน์ต้องมากกว่า 40 ID
                                 ขึ้นไป</b>
                         @endif
+                        <br>
+                        <b class="text-danger" id="countdown_otp"></b>
+
                         <div align="right">
                             @if ($data->status == 1)
                                 <a href="javascript:void(0)" onclick="config(this)" data-status="1" class="btn btn-danger"
@@ -182,7 +185,7 @@
                                                     @if ($user->otp == 2)
                                                         <b class="text-success">ยืนยันแล้ว</b>
                                                     @else
-                                                        <a href="javascript:void(0)" class="btn btn-success"
+                                                        <a href="javascript:void(0)" class="btn btn-success btn-status-otp"
                                                             onclick="accpt_otp(@json($user->id))" id='btn_edit'>ยืนยัน
                                                             OTP</a>
                                                     @endif
@@ -265,6 +268,49 @@
         </div>
     </div>
     <script>
+        function time_delay_otp(val) {
+            // let time = "{{ Session::get('time_count_otp') }}"
+            // console.log("test " + val);
+            let timeleft = val == null ? 0 : val;
+            var downloadTimer = setInterval(function() {
+                if (timeleft <= 0) {
+                    clearInterval(downloadTimer);
+                    document.getElementById("countdown_otp").innerHTML = "";
+                    $(".btn-status-otp").attr("disabled", false)
+                } else {
+                    document.getElementById("countdown_otp").innerHTML = "<i class='text-danger'>" + "อีก " +
+                        timeleft +
+                        " วินาที ปุ่มยืนยัน OTP ถึงจะใช้งานได้อีกครั้ง" + "</i>";
+                    $(".btn-status-otp").attr("disabled", true)
+                }
+                timeleft -= 1;
+            }, 1000);
+        }
+
+        function jq_start_up() {
+            $(function() {
+                $("#password").keypress(function(event) {
+                    var ew = event.which;
+                    if (ew == 32)
+                        return true;
+                    if (31 <= ew && ew <= 57)
+                        return true;
+                    if (64 <= ew && ew <= 90)
+                        return true;
+                    if (97 <= ew && ew <= 122)
+                        return true;
+                    Swal.fire(
+                        'มีข้อผิดพลาด!',
+                        'ห้ามกรอกข้อมูลที่มีภาษาไทย',
+                        'error'
+                    )
+                    return false;
+                });
+            });
+
+        }
+
+
         function time_delay(val) {
             let timeleft = val == null ? 0 : val;
             var downloadTimer = setInterval(function() {
@@ -282,7 +328,9 @@
         }
 
         window.onload = async function(e) {
+            time_delay_otp("{{ Session::get('time_count_otp') }}")
             time_delay("{{ Session::get('time_count') }}")
+            jq_start_up()
             // let status = JSON.parse("{{ json_encode($chk_datas3) }}");
             // let real_data = JSON.parse("{{ json_encode($real_data) }}");
             let status = {!! json_encode($chk_datas3) !!};
@@ -348,6 +396,8 @@
         }
 
         function accpt_otp(id) {
+            $(".btn-status-otp").attr("disabled", true)
+
             let _url = "/update_status_otp/" + id;
             $.ajax({
                 url: _url,

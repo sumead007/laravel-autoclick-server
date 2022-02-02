@@ -43,6 +43,7 @@ class SettingController extends Controller
             $data->image_screen_shot2 = asset('/images/loading/1.gif');
         }
         $this->time_delay();
+        $this->time_delay_otp();
         return view('setting', compact('data', 'datas2', 'chk_datas3', 'real_data', 'sum_sent_success', 'sum_sent_nonsuccess', 'sum_user_used_line'));
     }
 
@@ -56,6 +57,20 @@ class SettingController extends Controller
             session()->put("time_count",  $totalDuration);
         } else {
             session()->put("time_count", 0);
+        }
+        return null;
+    }
+
+    public function time_delay_otp()
+    {
+        $finishTime = session()->get("finish_time_otp");
+        $startTime = Carbon::parse(Carbon::now());
+
+        if ($finishTime != null && $startTime <= $finishTime) {
+            $totalDuration = $finishTime->diffInSeconds($startTime);
+            session()->put("time_count_otp",  $totalDuration);
+        } else {
+            session()->put("time_count_otp", 0);
         }
         return null;
     }
@@ -217,9 +232,12 @@ class SettingController extends Controller
         LineLogin::find($id)->update(["otp" => $request->otp]);
         if ($request->otp == 1) {
             $data->update(['action' => 1]);
-        }else {
+        } else {
             $data->update(['action' => 4]);
         }
+        //เวลาล่าสุดที่กด
+        $finishTime = Carbon::parse(Carbon::now())->addSeconds(30);
+        session()->put("finish_time_otp", $finishTime);
         return response()->json(200);
     }
 }
